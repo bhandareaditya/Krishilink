@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KrishiLink</title>
+<meta name="description" content="KrishiLink: check prices against MSP, store and sell grain at the right time, and tools for farmers, field partners, FPOs, traders and buyers.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Hind:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F6F3;--surface:#FFFFFF;--line:#DDE3E0;--text:#1F2D2B;--muted:#4F5B58;
+  --green:#0F6E56;--green-d:#0A5240;--green-l:#E4F1EC;--amber:#F2B544;--amber-l:#FBF0D9;--amber-d:#6B4600;
+  --dark:#1F2D2B;--dark-2:#2C3E3B;--dark-m:#B9C4C1;--red:#9A2A1F;--red-l:#FDE7E4;--shell:#E6EAE6;
+  --font:"Hind","Noto Sans Kannada",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#121A19;--surface:#1B2624;--line:#2F3D3A;--text:#E8EEEC;--muted:#A9B6B3;--green-l:#173A31;--amber-l:#3A2E12;--amber-d:#F2CF85;--red-l:#3E1E1A;--red:#FF9C92;--shell:#0C1211;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121A19;--surface:#1B2624;--line:#2F3D3A;--text:#E8EEEC;--muted:#A9B6B3;--green-l:#173A31;--amber-l:#3A2E12;--amber-d:#F2CF85;--red-l:#3E1E1A;--red:#FF9C92;--shell:#0C1211;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%}
+body{margin:0;background:var(--shell);color:var(--text);font-family:var(--font);font-size:17px;line-height:1.45;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bg)}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--green)}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.app{max-width:480px;min-height:100%;margin:0 auto;background:var(--bg);position:relative;padding-bottom:96px}
+@media (min-width:520px){.app{box-shadow:0 0 0 1px var(--line),0 30px 80px -40px rgba(0,0,0,.35)}}
+.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);display:flex;align-items:center;gap:10px;padding:14px 16px 10px}
+.hdr h1{font-size:21px;font-weight:700;margin:0;line-height:1.2;flex:1}
+.back{width:44px;height:44px;border-radius:22px;background:var(--surface);border:1.5px solid var(--line);display:grid;place-items:center;text-decoration:none;color:var(--text);flex:none}
+.main{padding:4px 16px 16px;display:flex;flex-direction:column;gap:12px}
+.c{background:var(--surface);border:1.5px solid var(--line);border-radius:18px;padding:16px}
+.c.dk{background:var(--dark);border:0;color:#fff}
+.c.am{background:var(--amber-l);border-color:#EFD7A4;color:var(--amber-d)}
+.mut{color:var(--muted)}.dk .mut,.mut2{color:var(--dark-m)}
+.lbl{font-size:15px;color:var(--muted)}.dk .lbl{color:var(--dark-m)}
+.hv{font-size:38px;font-weight:700;line-height:1.1}
+.amber{color:var(--amber)}.okc{color:#7FD8B4}
+.h2{font-size:26px;font-weight:700;line-height:1.2;margin:0}
+.h3{font-size:18px;font-weight:700;margin:0 0 8px}
+.sep{height:1px;background:rgba(255,255,255,.14);margin:14px 0}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.mini{background:var(--bg);border-radius:12px;padding:8px 10px}.dk .mini{background:var(--dark-2)}
+.mini small{display:block;font-size:13px;color:var(--muted)}.dk .mini small{color:var(--dark-m)}
+.mini b{font-size:20px}
+.b{display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 18px;border-radius:26px;border:0;background:var(--green);color:#fff;font-weight:700;font-size:17px;text-decoration:none;cursor:pointer;text-align:center;line-height:1.2}
+.b.am{background:var(--amber);color:#1F2D2B}
+.b.gh{background:var(--surface);color:var(--text);border:1.5px solid var(--line)}
+.dk .b.gh{background:transparent;color:#fff;border-color:#5C6E6A}
+.b.big{min-height:58px;font-size:18px;width:100%}
+.b.sm{min-height:44px;font-size:15px;padding:0 14px}
+.b:disabled{opacity:.45;cursor:not-allowed}
+.rowlink{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:18px;background:var(--surface);border:1.5px solid var(--line);text-decoration:none;color:var(--text);min-height:72px;cursor:pointer;width:100%;text-align:left}
+.rowlink.pri{background:var(--green);border-color:var(--green);color:#fff}
+.rowlink .ico{width:46px;height:46px;border-radius:23px;background:var(--green-l);color:var(--green);display:grid;place-items:center;flex:none}
+.rowlink.pri .ico{background:rgba(255,255,255,.16);color:#fff}
+.rowlink .ico.a{background:var(--amber-l);color:#8A5A00}
+.rowlink .tx{flex:1;display:flex;flex-direction:column}
+.rowlink .tx b{font-size:18px}.rowlink .tx span{font-size:15px;color:var(--muted)}.rowlink.pri .tx span{color:#DDF1E9}
+.chev{flex:none;opacity:.6}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{min-height:40px;padding:0 16px;border-radius:20px;border:1.5px solid var(--line);background:var(--surface);font-size:16px;cursor:pointer;color:var(--text)}
+.chip[aria-pressed="true"]{background:var(--dark);border-color:var(--dark);color:#fff;font-weight:600}
+.f{display:grid;gap:5px;min-width:0}.f>span{font-size:15px;font-weight:600}
+.in{box-sizing:border-box;width:100%;min-width:0;min-height:52px;border:1.5px solid var(--line);border-radius:14px;padding:0 14px;font-size:18px;background:var(--surface)}
+textarea.in{padding:12px 14px;min-height:96px;resize:vertical}
+.in:focus{border-color:var(--green);outline:none}
+.stack{display:flex;flex-direction:column;gap:12px}
+.step{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.step button{width:56px;height:56px;border-radius:28px;border:1.5px solid var(--line);background:var(--surface);font-size:26px;cursor:pointer;flex:none}
+.dk .step button{background:transparent;color:#fff;border-color:#5C6E6A}
+.step .v{text-align:center}.step .v b{display:block;font-size:40px;line-height:1}.step .v span{font-size:15px}
+.tag{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:14px;padding:3px 10px;border-radius:12px}
+.tag.am{background:var(--amber);color:#1F2D2B}.tag.gr{background:var(--green-l);color:var(--green-d)}.tag.rd{background:var(--red-l);color:var(--red)}
+.flag{border-radius:14px;padding:12px 14px;font-weight:700;font-size:17px}
+.flag.ok{background:var(--green-l);color:var(--green-d)}.flag.bad{background:var(--red-l);color:var(--red)}
+.list{list-style:none;margin:0;padding:0}
+.list li{display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--line)}
+.list li:first-child{border-top:0}
+.list .t{flex:1;min-width:0}.list .t b{display:block;font-size:16px}.list .t small{display:block;font-size:14px;color:var(--muted)}
+.x{border:0;background:transparent;color:var(--red);font-weight:700;min-height:44px;padding:0 6px;cursor:pointer}
+.seg{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:8px}
+.seg button{min-height:48px;border-radius:24px;border:2px solid var(--line);background:var(--surface);font-size:16px;cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--green);background:var(--green-l);color:var(--green-d);font-weight:700}
+.bar{height:10px;border-radius:5px;background:var(--line);overflow:hidden}.bar span{display:block;height:100%;background:var(--green)}
+.dots{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.dots i{height:6px;border-radius:3px;background:var(--line)}.dots i.on{background:var(--green)}
+.msg{white-space:pre-wrap;font-size:17px;margin:6px 0 0}
+details{min-width:0}
+details.ac{background:var(--surface);border:1.5px solid var(--line);border-radius:18px;padding:0 16px}
+details.ac summary{min-height:60px;display:flex;align-items:center;gap:12px;font-weight:700;font-size:17px;cursor:pointer;list-style:none}
+details.ac summary::-webkit-details-marker{display:none}
+details.ac[open]{padding-bottom:14px}
+details.ac p{margin:0 0 12px;font-size:17px}
+.check{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line);cursor:pointer}
+.check:first-child{border-top:0}
+.check input{width:24px;height:24px;margin-top:2px;accent-color:var(--green);flex:none}
+.src{font-size:13px;color:var(--muted);margin:0}
+.ext{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:54px;padding:0 16px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--text);text-decoration:none;font-weight:600}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;max-width:480px;margin:0 auto;background:var(--surface);border-top:1px solid var(--line);display:grid;padding-bottom:env(safe-area-inset-bottom,0px)}
+.nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:64px;font-size:13px;color:var(--muted);text-decoration:none;text-align:center;line-height:1.15;padding:4px 2px}
+.nav a[aria-current="page"]{color:var(--green);font-weight:700}
+.fab{position:fixed;z-index:31;right:max(16px,calc((100vw - 480px)/2 + 16px));bottom:calc(84px + env(safe-area-inset-bottom,0px));height:56px;padding:0 20px 0 16px;border-radius:28px;background:var(--green);color:#fff;display:flex;align-items:center;gap:8px;text-decoration:none;font-weight:700;box-shadow:0 8px 20px rgba(15,110,86,.35)}
+.toast{position:fixed;left:50%;bottom:calc(150px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:var(--dark);color:#fff;padding:12px 18px;border-radius:24px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:80;max-width:calc(100vw - 32px);text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:700}
+.logo i{width:40px;height:40px;border-radius:12px;background:var(--green);display:grid;place-items:center;color:#fff}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.tbl{width:100%;border-collapse:collapse;font-size:16px}.tbl th{text-align:left;font-weight:600;color:var(--muted);font-size:14px;padding:6px 0}.tbl td{padding:9px 0;border-top:1px solid var(--line)}.tbl td:last-child,.tbl th:last-child{text-align:right}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+
+/* ================= LANDING (award layer) ================= */
+html.site body{background:#0B1F19}
+html.site body::before{background:#0B1F19}
+#site{--ink:#0B1F19;--paper:#F4F5F2;--am:#F2B544;--gr:#0F6E56;--disp:"Archivo","Hind",sans-serif;color:var(--paper);font-family:var(--font);overflow-x:clip}
+#site a{color:inherit}
+.disp{font-family:var(--disp);font-stretch:62%;font-weight:800;text-transform:none;letter-spacing:-.01em;line-height:.88}
+.ld{position:fixed;inset:0;z-index:200;background:var(--am);color:var(--ink);display:flex;flex-direction:column;justify-content:flex-end;padding:6vw}
+.ld-n{font-family:var(--disp);font-stretch:62%;font-weight:900;font-size:clamp(120px,26vw,360px);line-height:.8;display:flex;align-items:flex-end;gap:16px}
+.ld-n small{font-family:var(--font);font-size:clamp(18px,2vw,26px);font-weight:600;padding-bottom:3vw}
+.ld-bar{height:4px;background:rgba(11,31,25,.2);margin-top:3vw}.ld-bar i{display:block;height:100%;width:0;background:var(--ink)}
+.snav{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:90;display:flex;align-items:center;gap:24px;padding:18px clamp(16px,4vw,48px);mix-blend-mode:normal;transition:background .3s}
+.snav.solid{background:rgba(11,31,25,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.slogo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;font-size:20px}
+.slogo i{width:36px;height:36px;border-radius:10px;background:var(--am);color:var(--ink);display:grid;place-items:center}
+.snav nav{display:flex;gap:26px;margin-left:auto}
+.snav nav a{text-decoration:none;font-weight:600;opacity:.8;font-size:16px}.snav nav a:hover{opacity:1}
+.spill{display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 22px;border-radius:999px;background:var(--am);color:var(--ink)!important;font-weight:700;text-decoration:none;white-space:nowrap}
+.spill.big{min-height:60px;padding:0 30px;font-size:19px}
+.sghost{display:inline-flex;align-items:center;min-height:60px;padding:0 26px;border-radius:999px;border:1.5px solid rgba(244,245,242,.35);text-decoration:none;font-weight:700;font-size:19px}
+@media (max-width:820px){.snav nav{display:none}.snav .spill{margin-left:auto}}
+.hero2{position:relative;min-height:100svh;display:flex;align-items:flex-end;padding:110px clamp(16px,4vw,48px) clamp(72px,9vh,110px);overflow:hidden}
+#field{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero2::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(11,31,25,.88) 0%,rgba(11,31,25,.55) 45%,rgba(11,31,25,0) 75%),linear-gradient(0deg,rgba(11,31,25,.75) 0%,rgba(11,31,25,0) 45%)}
+@media (max-width:760px){.hero2::before{background:linear-gradient(0deg,rgba(11,31,25,.92) 0%,rgba(11,31,25,.7) 55%,rgba(11,31,25,.2) 100%)}}
+.h-in{position:relative;z-index:2;max-width:1400px;width:100%}
+.mega{font-size:clamp(60px,min(14vw,17vh),220px);margin:0 0 28px;color:var(--paper)}
+.mega .ln{display:block;overflow:hidden;padding-bottom:.04em}.mega .ln>span{display:inline-block}
+.mega .am{color:var(--am)}
+.h-sub{max-width:52ch;font-size:clamp(18px,1.6vw,22px);color:rgba(244,245,242,.82);margin:0 0 30px}
+.h-cta{display:flex;gap:12px;flex-wrap:wrap}
+.cue{position:absolute;right:clamp(16px,4vw,48px);bottom:32px;z-index:2;font-size:14px;letter-spacing:.08em;opacity:.7;display:flex;align-items:center;gap:10px}
+.cue::after{content:"";width:1px;height:48px;background:currentColor;animation:cue 1.8s infinite}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.stmt{background:var(--paper);color:var(--ink);padding:clamp(96px,16vh,180px) clamp(16px,4vw,48px)}
+.stmt .tag2{font-weight:700;color:var(--gr);margin:0 0 24px;font-size:17px}
+.fill{font-family:var(--disp);font-stretch:85%;font-weight:700;font-size:clamp(34px,5.4vw,84px);line-height:1.02;letter-spacing:-.02em;margin:0;max-width:22ch}
+.fill .w{opacity:.14}
+.no-anim .fill .w{opacity:1}
+.curve{background:var(--ink);position:relative}
+.curve-pin{min-height:100svh;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);gap:clamp(24px,4vw,64px);align-items:center;padding:clamp(80px,10vh,120px) clamp(16px,4vw,48px)}
+@media (max-width:900px){.curve-pin{grid-template-columns:1fr}}
+.lab{color:var(--am);font-weight:700;margin:0 0 18px}
+.chaps{position:relative;min-height:300px}
+.chap{position:absolute;inset:0 0 auto 0;opacity:0;transform:translateY(24px);transition:opacity .5s,transform .5s}
+.chap.on{opacity:1;transform:none}
+.no-anim .chap{position:static;opacity:1;transform:none;margin-bottom:28px}
+.no-anim .chaps{min-height:0}
+.chap h3{font-family:var(--disp);font-stretch:62%;font-weight:800;font-size:clamp(54px,7vw,110px);line-height:.9;margin:0 0 18px;color:var(--paper)}
+.chap p{font-size:clamp(18px,1.5vw,21px);color:rgba(244,245,242,.8);max-width:40ch;margin:0}
+.curve-svg{width:100%;height:auto;overflow:visible}
+.curve-svg .ax{stroke:rgba(244,245,242,.2);stroke-width:1.5}
+.curve-svg .cp{fill:none;stroke:var(--am);stroke-width:5;stroke-linecap:round}
+.curve-svg text{fill:rgba(244,245,242,.7);font:600 15px var(--font)}
+.curve-svg .mk circle{fill:var(--ink);stroke:var(--am);stroke-width:4}
+.curve-svg .mk text{fill:var(--paper);font-weight:700}
+.roles2{background:var(--paper);color:var(--ink);overflow:hidden}
+.r-wrap{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:clamp(80px,10vh,110px) 0}
+.r-head{padding:0 clamp(16px,4vw,48px);display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:36px}
+.r-head h2{font-size:clamp(56px,9vw,150px);margin:0}
+.r-head p{max-width:34ch;font-size:19px;margin:0;color:#3D4A47}
+.r-track{display:flex;gap:20px;padding:0 clamp(16px,4vw,48px);width:max-content}
+.rcard{width:min(78vw,440px);min-height:440px;border-radius:28px;padding:30px;display:flex;flex-direction:column;gap:14px;text-decoration:none;color:var(--ink)!important;background:#E7EAE5;transition:transform .35s}
+.rcard:hover{transform:translateY(-6px)}
+.rcard:nth-child(1){background:var(--gr);color:#fff!important}.rcard:nth-child(3){background:var(--am)}.rcard:nth-child(5){background:var(--ink);color:var(--paper)!important}
+.rcard .hi{font-size:22px;opacity:.75}
+.rcard h3{font-family:var(--disp);font-stretch:62%;font-weight:800;font-size:clamp(56px,6vw,84px);line-height:.88;margin:0}
+.rcard ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:8px;font-size:18px}
+.rcard li{padding-top:8px;border-top:1px solid currentColor;border-color:rgba(0,0,0,.15)}
+.rcard:nth-child(1) li,.rcard:nth-child(5) li{border-color:rgba(255,255,255,.2)}
+.rcard .go{margin-top:auto;font-weight:700;font-size:18px;display:flex;align-items:center;gap:10px}
+@media (max-width:760px){.r-track{overflow-x:auto;width:auto;scroll-snap-type:x mandatory;padding-bottom:12px}.rcard{scroll-snap-align:start;flex:none}}
+.msp2{background:var(--am);color:var(--ink);padding:56px 0 28px;overflow:hidden}
+.mq{overflow:hidden}
+.mq-in{display:flex;gap:56px;width:max-content;animation:mq 60s linear infinite;align-items:center}
+.mq-in span{font-family:var(--disp);font-stretch:62%;font-weight:800;font-size:clamp(64px,10vw,150px);line-height:1;white-space:nowrap}
+.mq-in span b{font-weight:800;opacity:.55;margin-left:.25em}
+.mq-in svg{flex:none}
+@keyframes mq{to{transform:translateX(-50%)}}
+.mq-src{padding:18px clamp(16px,4vw,48px) 0;margin:0;font-size:14px;font-weight:600}
+.tools2{background:var(--ink);padding:clamp(96px,14vh,160px) clamp(16px,4vw,48px)}
+.tools2 h2{font-size:clamp(56px,9vw,150px);margin:0 0 12px}
+.tools2 .sub{font-size:19px;color:rgba(244,245,242,.75);max-width:48ch;margin:0 0 40px}
+.bento{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
+.bx{border-radius:28px;padding:28px;background:#14302A;min-width:0}
+.bx.w7{grid-column:span 7}.bx.w5{grid-column:span 5}.bx.w4{grid-column:span 4}.bx.w8{grid-column:span 8}
+@media (max-width:900px){.bx.w7,.bx.w5,.bx.w4,.bx.w8{grid-column:1/-1}}
+.bx.am{background:var(--am);color:var(--ink)}.bx.lt{background:var(--paper);color:var(--ink)}
+.bx h3{font-size:24px;margin:0 0 4px}.bx .ds{opacity:.75;margin:0 0 18px}
+.bx .g{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.bx label{display:grid;gap:6px;font-size:15px;font-weight:600}
+.bx input,.bx select{box-sizing:border-box;width:100%;min-height:52px;border-radius:14px;border:1.5px solid rgba(244,245,242,.2);background:rgba(244,245,242,.06);color:inherit;padding:0 14px;font-size:18px}
+.bx.am input,.bx.am select,.bx.lt input,.bx.lt select{border-color:rgba(11,31,25,.25);background:rgba(255,255,255,.55)}
+.bx select option{color:#0B1F19}
+.bx .out{margin-top:20px;padding-top:18px;border-top:1px solid rgba(244,245,242,.15)}
+.bx.am .out,.bx.lt .out{border-color:rgba(11,31,25,.15)}
+.bx .bigv{font-family:var(--disp);font-stretch:70%;font-weight:800;font-size:clamp(48px,6vw,84px);line-height:.95}
+.pill2{display:inline-block;margin-top:10px;padding:6px 14px;border-radius:999px;font-weight:700}
+.pill2.ok{background:#CFEBDF;color:#0A5240}.pill2.bad{background:#FDE0DB;color:#8E2418}
+.bx.kcc{display:flex;flex-direction:column;justify-content:space-between;gap:16px;text-decoration:none}
+.bx.kcc .bigv{font-size:clamp(40px,5vw,64px)}
+.end2{background:var(--paper);color:var(--ink);padding:clamp(96px,14vh,170px) clamp(16px,4vw,48px) 60px}
+.end2 h2{font-size:clamp(72px,14vw,230px);margin:0 0 36px}
+.end2 h2 span{color:var(--gr)}
+.langs{display:flex;gap:12px;flex-wrap:wrap}
+.langs button{min-height:64px;padding:0 30px;border-radius:999px;border:0;background:var(--ink);color:var(--paper);font-size:22px;font-weight:700;cursor:pointer}
+.langs button:hover{background:var(--gr)}
+.foot2{background:var(--ink);color:rgba(244,245,242,.7);padding:28px clamp(16px,4vw,48px) 40px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:14px}
+.foot2 a{color:var(--paper)}
+@media (prefers-reduced-motion: reduce){.mq-in{animation:none}.cue::after{animation:none}}
+.start-site{font-size:14px;font-weight:600;text-decoration:none;color:var(--muted)}
+
+/* ===== Polish layer, Nov 2026 ===== */
+@media (min-width:520px){
+ html:not(.site) body{background:radial-gradient(1200px 600px at 50% -10%,#1C4A3D 0,transparent 60%),radial-gradient(900px 500px at 50% 110%,rgba(242,181,68,.16) 0,transparent 60%),#0B1F1A}
+ html:not(.site) .app{box-shadow:0 0 0 1px rgba(255,255,255,.06),0 60px 120px -40px rgba(0,0,0,.7)}
+ html:not(.site) .nav{border-radius:22px 22px 0 0;box-shadow:0 -10px 30px -18px rgba(0,0,0,.35)}
+}
+.wl{padding:12px 0 8px;display:flex;flex-direction:column;gap:20px}
+.wl-card{position:relative;overflow:hidden;background:linear-gradient(160deg,#0F6E56,#0A3F33);color:#fff;border-radius:26px;padding:24px 22px 140px;min-height:0}
+.wl-field{position:absolute;left:0;right:0;bottom:0;width:100%;height:132px;stroke:#F2B544;fill:#F2B544;stroke-width:2;opacity:.9}
+.wl-field path{fill:none}
+.wl-logo{color:#fff}
+.wl-logo i{background:#F2B544 !important;color:#1F2D2B !important}
+.wl-t{position:relative;margin:18px 0 0;font-family:"Archivo",var(--font);font-stretch:90%;font-weight:800;font-size:30px;line-height:1.05;letter-spacing:-.01em}
+.wl-q{margin:4px 0 0;font-size:19px;line-height:1.45;font-weight:700;text-align:center;color:var(--text)}
+.wl-langs{display:flex;flex-direction:column;gap:10px}
+.wl-b{display:flex;align-items:center;gap:12px;min-height:72px;padding:0 20px;border-radius:20px;border:1.5px solid var(--line);background:var(--surface);color:var(--text);cursor:pointer;text-align:left;transition:border-color .15s,background .15s}
+.wl-b b{font-size:24px;flex:none}
+.wl-b span{color:var(--muted);font-size:15px;flex:1;text-align:left}
+.wl-b b:only-of-type{flex:1}
+.wl-b svg{color:var(--green);flex:none;margin-left:auto}
+.wl-b:hover{border-color:var(--green);background:var(--green-l)}
+.wl-b:active{transform:scale(.99)}
+.wl-f{margin:4px 0 0;text-align:center;color:var(--muted);font-size:15px}
+.foot2{display:grid;grid-template-columns:minmax(0,1.1fr) auto minmax(0,1.3fr);gap:48px;align-items:start;padding:64px clamp(16px,4vw,48px) calc(48px + env(safe-area-inset-bottom,0px));border-top:6px solid #F2B544;font-size:15px}
+.f2-brand b{font-family:"Archivo",var(--font);font-stretch:90%;font-weight:800;font-size:28px;color:var(--paper);vertical-align:middle;margin-left:10px}
+.f2-logo{display:inline-grid;place-items:center;width:36px;height:36px;border-radius:10px;background:#F2B544;color:#1F2D2B;vertical-align:middle}
+.f2-brand p{margin:14px 0 0;max-width:32ch;color:rgba(244,245,242,.75)}
+.f2-nav{display:flex;flex-direction:column;gap:10px}
+.f2-nav a,.f2-note a{color:var(--paper);text-decoration:none;font-weight:600}
+.f2-nav a:hover,.f2-note a:hover{color:#F2B544}
+.f2-note p{margin:0 0 10px;max-width:52ch}
+@media (max-width:860px){.foot2{grid-template-columns:minmax(0,1fr);gap:28px}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+</head>
+<body>
+<div id="site" hidden>
+<div class="ld" id="ld" aria-hidden="true"><div class="ld-n"><span id="ldn">0</span><small>quintal</small></div><div class="ld-bar"><i id="ldb"></i></div></div>
+<header class="snav" id="snav"><a class="slogo" href="#home"><i><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V9"/><path d="M12 13c-3 0-5-2-5-5 3 0 5 2 5 5zM12 11c3 0 5-2 5-5-3 0-5 2-5 5z"/></svg></i>KrishiLink</a><nav aria-label="Site"><a href="#s-story">Story</a><a href="#s-roles">Who it’s for</a><a href="#s-msp">MSP</a><a href="#s-tools">Tools</a></nav><a class="spill" href="#start">Open the app</a></header>
+<section class="hero2" aria-label="Introduction"><canvas id="field" aria-hidden="true"></canvas>
+<div class="h-in"><h1 class="mega disp"><span class="ln"><span>Harvest is</span></span><span class="ln"><span>not the time</span></span><span class="ln"><span class="am">to sell.</span></span></h1>
+<p class="h-sub">Check every offer against MSP, store your grain safely, borrow against it and sell when the price is right. Free, in Hindi, Kannada and English.</p>
+<div class="h-cta"><a class="spill big" href="#start">Open the app <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="sghost" href="#s-tools">Try a price check</a></div></div><div class="cue" aria-hidden="true">Scroll</div></section>
+<section class="stmt" id="s-story"><p class="tag2">Why KrishiLink</p><p class="fill" id="fillT">Most farmers sell right after harvest, when prices dip. KrishiLink helps them hold, borrow and sell at the right time.</p></section>
+<section class="curve" id="s-curve"><div class="curve-pin" id="cpin"><div><p class="lab">An illustrative season</p><div class="chaps"><div class="chap on" data-c="0"><h3>Harvest week</h3><p>Everyone sells at once. Mandis fill up and prices often fall to their lowest of the season.</p></div><div class="chap" data-c="1"><h3>Store and borrow</h3><p>Keep grain in a WDRA-registered warehouse, get an e-NWR receipt, and borrow against it from a bank.</p></div><div class="chap" data-c="2"><h3>Sell on recovery</h3><p>Sell when the price is right. Repay the loan from the sale and keep the difference after rent and interest.</p></div></div></div>
+<svg class="curve-svg" viewBox="0 0 800 440" role="img" aria-label="Illustrative price curve: prices dip at harvest and recover over the following months"><line class="ax" x1="40" y1="400" x2="780" y2="400"/><line class="ax" x1="40" y1="30" x2="40" y2="400"/><text x="44" y="430">Before harvest</text><text x="230" y="430">Harvest</text><text x="640" y="430">Months later</text><text x="48" y="24">Price</text>
+<path id="cpath" class="cp" d="M40 150 C 120 160, 170 340, 250 352 S 430 300, 520 210 S 690 92, 770 80"/>
+<g class="mk" id="mk1"><circle cx="250" cy="352" r="11"/><text x="270" y="378">Sell here: lowest price</text></g>
+<g class="mk" id="mk2"><circle cx="420" cy="290" r="11"/><text x="440" y="316">Stored, loan taken</text></g>
+<g class="mk" id="mk3"><circle cx="740" cy="84" r="11"/><text x="560" y="62">Sell here: price recovered</text></g></svg></div></section>
+<section class="roles2" id="s-roles"><div class="r-wrap"><div class="r-head"><h2 class="disp">Five people.<br>One app.</h2><p>From the farm gate to the factory gate, everyone in the grain trade gets their own tools, in their own language.</p></div>
+<div class="r-track" id="rtrack">
+<a class="rcard" href="#farmer"><span class="hi">किसान / ರೈತ</span><h3>Farmer</h3><ul><li>Check an offer against MSP</li><li>Hold or sell, on your numbers</li><li>Loan on stored grain</li></ul><span class="go">Open <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+<a class="rcard" href="#crp"><span class="hi">फील्ड साथी</span><h3>Field partner</h3><ul><li>Add farmers in the village</li><li>Plan and log visits</li><li>Ready WhatsApp explainers</li></ul><span class="go">Open <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+<a class="rcard" href="#fpo"><span class="hi">किसान उत्पादक संगठन</span><h3>FPO</h3><ul><li>Members and expected harvest</li><li>Pool one lot, split payment</li><li>Send today’s price to all</li></ul><span class="go">Open <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+<a class="rcard" href="#trader"><span class="hi">व्यापारी</span><h3>Trader</h3><ul><li>Landed cost per quintal</li><li>Counter-offer with quality terms</li><li>Full MSP table</li></ul><span class="go">Open <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+<a class="rcard" href="#buyer"><span class="hi">कंपनी खरीदार</span><h3>Company buyer</h3><ul><li>Write and send an RFQ</li><li>Supplier on-time and QC score</li><li>Document checklist per lot</li></ul><span class="go">Open <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+</div></div></section>
+<section class="msp2" id="s-msp" aria-label="Minimum support prices"><div class="mq"><div class="mq-in" id="mq"></div></div><p class="mq-src">Minimum support prices per quintal. Source: Government of India (CCEA), rabi 2027-28 and kharif 2026-27.</p></section>
+<section class="tools2" id="s-tools"><h2 class="disp">Try it here.</h2><p class="sub">The same calculators the app uses. Type your own numbers.</p>
+<div class="bento">
+<div class="bx w7"><h3>Price check</h3><p class="ds">Is a buyer’s offer fair?</p><div class="g"><label>Crop<select id="xc"></select></label><label>Offer (₹/quintal)<input id="xo" type="number" inputmode="decimal" placeholder="2400"></label><label>Quintal<input id="xq" type="number" inputmode="decimal" value="20"></label><label>Commission %<input id="xm" type="number" inputmode="decimal" value="2"></label></div><div class="out" id="xout"></div></div>
+<div class="bx am w5"><h3>Hold or sell?</h3><p class="ds">Does waiting pay after rent?</p><div class="g"><label>Quintal<input id="hq" type="number" value="40"></label><label>Price today<input id="ht" type="number" value="2610"></label><label>Price later<input id="hl" type="number" placeholder="2900"></label><label>Months<input id="hm" type="number" value="3"></label><label>Rent ₹/qtl/month<input id="hr" type="number" value="8"></label></div><div class="out" id="hout"></div></div>
+<div class="bx lt w8"><h3>Loan on stored grain</h3><p class="ds">Banks often lend about 70% of the value against an e-NWR receipt. Ask your bank for the exact amount and rate.</p><div class="g"><label>Crop<select id="lc2"></select></label><label>Quintal<input id="lq2" type="number" value="40"></label></div><div class="out" id="lout"></div></div>
+<a class="bx kcc w4" href="tel:18001801551"><div><h3>Kisan Call Centre</h3><p class="ds" style="margin:0">Free. Farming questions in your language, 6 am to 10 pm.</p></div><div class="bigv">1800 180 1551</div></a>
+</div></section>
+<section class="end2"><h2 class="disp">Hold. Borrow.<br><span>Sell right.</span></h2><div class="langs"><button type="button" data-golang="hi">हिंदी में खोलें</button><button type="button" data-golang="kn">ಕನ್ನಡದಲ್ಲಿ ತೆರೆಯಿರಿ</button><button type="button" data-golang="en">Open in English</button></div></section>
+<footer class="foot2"><div class="f2-brand"><span class="f2-logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V9"/><path d="M12 13c-3 0-5-2-5-5 3 0 5 2 5 5zM12 11c3 0 5-2 5-5-3 0-5 2-5 5z"/></svg></span><b>KrishiLink</b><p>Hold, borrow and sell your harvest at the right time. In Hindi, Kannada and English.</p></div><nav class="f2-nav" aria-label="Footer"><a href="#s-story">Story</a><a href="#s-roles">Who it’s for</a><a href="#s-msp">MSP</a><a href="#s-tools">Tools</a><a href="#start">Open the app</a></nav><div class="f2-note"><p>Calculators run on your numbers. Nothing is sent anywhere. MSP from the Government of India (CCEA).</p><p>Built by <a href="https://bhandareaditya.github.io/" target="_blank" rel="noopener">Aditya Bhandare</a></p></div></footer>
+</div>
+<div class="app">
+  <header class="hdr" id="hdr"></header>
+  <main class="main" id="main"></main>
+</div>
+<nav class="nav" id="nav" aria-label="App" hidden></nav>
+<div id="fabSlot"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+'use strict';
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var inr=function(n){return '₹'+Math.round(n||0).toLocaleString('en-IN')};
+var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+var S={get:function(k,d){try{var v=localStorage.getItem('kl2-'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set:function(k,v){try{localStorage.setItem('kl2-'+k,JSON.stringify(v))}catch(e){}}};
+var lang=S.get('lang',null);
+var KCC='18001801551';
+var wa=function(txt,num){return 'https://wa.me/'+(num?'91'+num:'')+'?text='+encodeURIComponent(txt)};
+var tt;function toast(m){var e=$('#toast');e.textContent=m;e.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){e.classList.remove('show')},2600)}
+
+/* ---- real reference data ---- */
+var MSP={wheat:[2610,'R'],paddy:[2441,'K'],maize:[2410,'K'],tur:[8450,'K'],gram:[5958,'R'],mustard:[6613,'R'],soybean:[5708,'K'],groundnut:[7517,'K'],cotton:[8267,'K'],ragi:[5205,'K'],bajra:[2900,'K'],moong:[8780,'K'],urad:[8200,'K'],masur:[7390,'R'],jowar:[4023,'K']};
+var CN={en:{wheat:'Wheat',paddy:'Paddy',maize:'Maize',tur:'Tur',gram:'Gram',mustard:'Mustard',soybean:'Soybean',groundnut:'Groundnut',cotton:'Cotton',ragi:'Ragi',bajra:'Bajra',moong:'Moong',urad:'Urad',masur:'Masur',jowar:'Jowar'},
+ hi:{wheat:'गेहूं',paddy:'धान',maize:'मक्का',tur:'अरहर',gram:'चना',mustard:'सरसों',soybean:'सोयाबीन',groundnut:'मूंगफली',cotton:'कपास',ragi:'रागी',bajra:'बाजरा',moong:'मूंग',urad:'उड़द',masur:'मसूर',jowar:'ज्वार'},
+ kn:{wheat:'ಗೋಧಿ',paddy:'ಭತ್ತ',maize:'ಮೆಕ್ಕೆಜೋಳ',tur:'ತೊಗರಿ',gram:'ಕಡಲೆ',mustard:'ಸಾಸಿವೆ',soybean:'ಸೋಯಾಬೀನ್',groundnut:'ಕಡಲೆಕಾಯಿ',cotton:'ಹತ್ತಿ',ragi:'ರಾಗಿ',bajra:'ಸಜ್ಜೆ',moong:'ಹೆಸರು',urad:'ಉದ್ದು',masur:'ಮಸೂರ',jowar:'ಜೋಳ'}};
+var MSPSRC='MSP: Government of India (CCEA). Rabi crops (R) for marketing season 2027-28, kharif crops (K) for 2026-27. Cotton is medium staple, paddy is common grade.';
+var EXT={agm:['https://agmarknet.gov.in/','Agmarknet: daily mandi prices'],enam:['https://enam.gov.in/','eNAM: online mandi trading'],wdra:['https://wdra.gov.in/','WDRA: registered warehouses and e-NWR'],soil:['https://soilhealth.dac.gov.in/','Soil Health Card portal'],imd:['https://mausam.imd.gov.in/','IMD weather forecasts']};
+
+/* ---- farmer language strings ---- */
+var T={
+en:{choose:'Choose your language',who:'Who are you?',whoSub:'We open the tools made for your work.',farmer:'Farmer',farmerS:'Check prices, store, sell, get a loan',crp:'Field partner (CRP)',crpS:'Onboard farmers, plan village visits',fpo:'FPO',fpoS:'Members, harvest, pooled lots, price messages',trader:'Trader',traderS:'Landed cost, offers, MSP reference',buyer:'Company buyer',buyerS:'RFQs, supplier scorecard, documents',slip:'Have a warehouse receipt? Add it to My grain.',add:'Add',call:'Call',
+greet:'Namaste',home:'Home',store:'Store',sell:'Sell',loan:'Loan',help:'Help',stockVal:'My grain value',noGrain:'Add your grain to see its value and whether to hold or sell.',addGrain:'Add my grain',hold:'Hold',holdTag:'HOLD',sellTag:'SELL NOW',pays:'Holding pays about',loses:'Holding loses about',setLater:'Enter the price you expect later to get a hold or sell call.',sellNow:'Sell now',seeStore:'See my grain',
+msp:'Government support price (MSP)',perq:'per quintal',q:'quintal',bags:'bags',priceCheck:'Price check',priceCheckS:'Is a buyer’s offer fair? Compare with MSP.',loanS:'See how much you can borrow on stored grain',services:'Farm services',servicesS:'Soil test, spraying request, weather',learn:'Learn in 1 minute',learnS:'MSP, warehouse loans, drying, weighing',kcc:'Kisan Call Centre (free)',kccS:'Farming questions in your language, 6 am to 10 pm',speak:'Speak to sell',
+crop:'Crop',offered:'Price a buyer offered (₹ per quintal)',qty:'How many quintal',comm:'Commission (%)',trans:'Transport and loading (₹ total)',take:'You take home',below:'below MSP per quintal',above:'above MSP per quintal',tip:'Ask about the government purchase centre in your district before selling.',enter:'Type the price a buyer offered to compare it with MSP.',listen:'Listen',share:'Share on WhatsApp',
+sellT:'Tell buyers you have grain',sellS:'We write the message. You send it to traders, your FPO or a WhatsApp group.',yp:'Your price (₹ per quintal)',place:'Village and district',ready:'Ready from',msg:'Your message',send:'Send on WhatsApp',save:'Save to My grain',saved:'Saved on this phone',say:'Say it',noVoice:'Voice typing is not available on this phone. Please type.',need:'Fill crop, quantity and price first.',
+tmpl:'Namaste. I have {q} quintal {c} for sale at {pl}. My price: ₹{p} per quintal.{d} Please call or reply on WhatsApp.',rd:' Ready from {d}.',
+myGrain:'My grain',where:'Where is it kept?',athome:'At home',inwh:'In a warehouse',whName:'Warehouse name or place',receipt:'Receipt number (optional)',onphone:'Saved only on this phone. Nothing is sent anywhere.',del:'Remove',holdQ:'Hold or sell?',today:'Price today (₹ per quintal)',later:'Price you expect later (₹ per quintal)',months:'Months to hold',rent:'Rent (₹ per quintal per month)',takeOut:'Take out grain',gate:'At the warehouse gate',g1:'Watch the weighing and check the scale shows zero first.',g2:'Ask for a moisture reading and note it down.',g3:'Keep the weighment slip and the receipt safe.',
+which:'Which stock?',howMany:'How many bags?',confirm:'Check and send',relMsg:'Namaste. Please release {b} bags ({q} quintal) of {c} from my stock.{r} I will collect on {d}.',relR:' Receipt number: {r}.',collect:'Collect on',sendWh:'Send request on WhatsApp',back:'Back',next:'Next',
+loanT:'Loan on stored grain',loanS2:'Check the amount before you go to the bank.',price:'Price (₹ per quintal)',rate:'Interest rate (% a year)',rateHint:'Ask your bank for the exact rate.',canGet:'You could get up to about',intr:'Interest for this period',repay:'Repay when you sell',l1:'Store in a WDRA-registered warehouse and get an e-NWR receipt.',l2:'Take the e-NWR to your bank. Many banks lend about 70% of the grain’s value.',l3:'Sell when the price is right. The loan is repaid from the sale.',
+soilT:'Free soil test',soilS:'Get your Soil Health Card and the right fertiliser dose.',sprayT:'Ask for spraying',sprayS:'Send a request to your FPO, KVK or a drone operator.',acres:'Acres',date:'Around',sprayMsg:'Namaste. I need spraying for {a} acres of {c} at {pl} around {d}. Please share the rate and a date.',wxT:'Weather',wxS:'District forecasts from IMD.',open:'Open',
+helpT:'Help',links:'Useful government sites',shareApp:'Share KrishiLink with a friend',switchRole:'Change role'},
+hi:{choose:'अपनी भाषा चुनें',who:'आप कौन हैं?',whoSub:'आपके काम के टूल खोलते हैं।',farmer:'किसान',farmerS:'दाम देखें, रखें, बेचें, लोन लें',crp:'फील्ड साथी (CRP)',crpS:'किसान जोड़ें, गाँव विज़िट',fpo:'FPO',fpoS:'सदस्य, फसल, साझा लॉट, भाव संदेश',trader:'व्यापारी',traderS:'कुल लागत, ऑफ़र, MSP',buyer:'कंपनी खरीदार',buyerS:'RFQ, सप्लायर स्कोर, दस्तावेज़',slip:'गोदाम की रसीद है? उसे मेरा अनाज में जोड़ें।',add:'जोड़ें',call:'कॉल',
+greet:'नमस्ते',home:'होम',store:'भंडार',sell:'बेचें',loan:'पैसा',help:'मदद',stockVal:'मेरे अनाज की कीमत',noGrain:'अपना अनाज जोड़ें, उसकी कीमत और रोकें या बेचें यह देखें।',addGrain:'मेरा अनाज जोड़ें',hold:'रोकें',holdTag:'रुकें',sellTag:'अभी बेचें',pays:'रोकने से फ़ायदा लगभग',loses:'रोकने से नुकसान लगभग',setLater:'बाद का अनुमानित दाम लिखें, तब रोकें या बेचें बताएंगे।',sellNow:'अभी बेचें',seeStore:'मेरा अनाज देखें',
+msp:'सरकारी समर्थन मूल्य (MSP)',perq:'प्रति क्विंटल',q:'क्विंटल',bags:'बोरी',priceCheck:'दाम देखें',priceCheckS:'खरीदार का दाम ठीक है? MSP से मिलाएं।',loanS:'रखे अनाज पर कितना लोन मिल सकता है',services:'खेत सेवाएं',servicesS:'मिट्टी जांच, छिड़काव, मौसम',learn:'1 मिनट में सीखें',learnS:'MSP, गोदाम लोन, सुखाना, तौल',kcc:'किसान कॉल सेंटर (मुफ़्त)',kccS:'आपकी भाषा में खेती के सवाल, सुबह 6 से रात 10',speak:'बोलकर बेचें',
+crop:'फसल',offered:'खरीदार ने कितना दाम बोला (₹ प्रति क्विंटल)',qty:'कितने क्विंटल',comm:'कमीशन (%)',trans:'ढुलाई और लदाई (₹ कुल)',take:'आपके हाथ में आएगा',below:'MSP से कम प्रति क्विंटल',above:'MSP से ज़्यादा प्रति क्विंटल',tip:'बेचने से पहले अपने जिले के सरकारी खरीद केंद्र के बारे में पूछें।',enter:'MSP से मिलाने के लिए खरीदार का बोला दाम लिखें।',listen:'सुनें',share:'WhatsApp पर भेजें',
+sellT:'खरीदारों को बताएं कि अनाज है',sellS:'संदेश हम लिखते हैं। आप व्यापारियों, FPO या WhatsApp ग्रुप को भेजें।',yp:'आपका दाम (₹ प्रति क्विंटल)',place:'गाँव और जिला',ready:'कब से तैयार',msg:'आपका संदेश',send:'WhatsApp पर भेजें',save:'मेरा अनाज में सेव करें',saved:'इस फ़ोन में सेव हुआ',say:'बोलकर बताएं',noVoice:'इस फ़ोन में बोलकर लिखना उपलब्ध नहीं। कृपया टाइप करें।',need:'पहले फसल, मात्रा और दाम भरें।',
+tmpl:'नमस्ते। मेरे पास {pl} में {q} क्विंटल {c} बिक्री के लिए है। मेरा दाम: ₹{p} प्रति क्विंटल।{d} कृपया कॉल करें या WhatsApp पर जवाब दें।',rd:' {d} से तैयार।',
+myGrain:'मेरा अनाज',where:'कहाँ रखा है?',athome:'घर पर',inwh:'गोदाम में',whName:'गोदाम का नाम या जगह',receipt:'रसीद नंबर (ज़रूरी नहीं)',onphone:'सिर्फ़ इस फ़ोन में सेव होता है। कहीं भेजा नहीं जाता।',del:'हटाएं',holdQ:'रोकें या बेचें?',today:'आज का दाम (₹ प्रति क्विंटल)',later:'बाद में अनुमानित दाम (₹ प्रति क्विंटल)',months:'कितने महीने रोकना',rent:'किराया (₹ प्रति क्विंटल प्रति माह)',takeOut:'अनाज निकालें',gate:'गोदाम के गेट पर',g1:'तौल सामने देखें, पहले कांटा शून्य पर है यह जांचें।',g2:'नमी की जांच करवाएं और लिख लें।',g3:'तौल पर्ची और रसीद संभाल कर रखें।',
+which:'कौन सा माल?',howMany:'कितनी बोरी?',confirm:'देखें और भेजें',relMsg:'नमस्ते। कृपया मेरे माल में से {c} की {b} बोरी ({q} क्विंटल) निकाल दें।{r} मैं {d} को लेने आऊँगा।',relR:' रसीद नंबर: {r}।',collect:'लेने की तारीख',sendWh:'WhatsApp पर अनुरोध भेजें',back:'पीछे',next:'आगे',
+loanT:'रखे अनाज पर लोन',loanS2:'बैंक जाने से पहले रकम देख लें।',price:'दाम (₹ प्रति क्विंटल)',rate:'ब्याज दर (% सालाना)',rateHint:'सही दर अपने बैंक से पूछें।',canGet:'आपको लगभग इतना मिल सकता है',intr:'इस अवधि का ब्याज',repay:'बेचने पर चुकाएं',l1:'WDRA-पंजीकृत गोदाम में रखें और e-NWR रसीद लें।',l2:'e-NWR बैंक ले जाएं। कई बैंक अनाज की कीमत का लगभग 70% देते हैं।',l3:'सही दाम पर बेचें। लोन बिक्री से चुक जाता है।',
+soilT:'मुफ़्त मिट्टी जांच',soilS:'मृदा स्वास्थ्य कार्ड और सही खाद की मात्रा पाएं।',sprayT:'छिड़काव मांगें',sprayS:'अपने FPO, KVK या ड्रोन वाले को अनुरोध भेजें।',acres:'एकड़',date:'लगभग तारीख',sprayMsg:'नमस्ते। मुझे {pl} में {a} एकड़ {c} पर लगभग {d} को छिड़काव चाहिए। कृपया रेट और तारीख बताएं।',wxT:'मौसम',wxS:'IMD से जिले का पूर्वानुमान।',open:'खोलें',
+helpT:'मदद',links:'काम की सरकारी साइटें',shareApp:'KrishiLink दोस्त को भेजें',switchRole:'भूमिका बदलें'},
+kn:{choose:'ನಿಮ್ಮ ಭಾಷೆ ಆರಿಸಿ',who:'ನೀವು ಯಾರು?',whoSub:'ನಿಮ್ಮ ಕೆಲಸಕ್ಕೆ ಬೇಕಾದ ಉಪಕರಣಗಳನ್ನು ತೆರೆಯುತ್ತೇವೆ.',farmer:'ರೈತ',farmerS:'ಬೆಲೆ ನೋಡಿ, ಇಡಿ, ಮಾರಿ, ಸಾಲ ಪಡೆಯಿರಿ',crp:'ಕ್ಷೇತ್ರ ಸಹಾಯಕ (CRP)',crpS:'ರೈತರನ್ನು ಸೇರಿಸಿ, ಗ್ರಾಮ ಭೇಟಿ',fpo:'FPO',fpoS:'ಸದಸ್ಯರು, ಬೆಳೆ, ಒಟ್ಟು ಲಾಟ್, ಬೆಲೆ ಸಂದೇಶ',trader:'ವ್ಯಾಪಾರಿ',traderS:'ಒಟ್ಟು ವೆಚ್ಚ, ಆಫರ್, MSP',buyer:'ಕಂಪನಿ ಖರೀದಿದಾರ',buyerS:'RFQ, ಪೂರೈಕೆದಾರರ ಅಂಕ, ದಾಖಲೆಗಳು',slip:'ಗೋದಾಮಿನ ರಸೀದಿ ಇದೆಯೇ? ಅದನ್ನು ನನ್ನ ಧಾನ್ಯಕ್ಕೆ ಸೇರಿಸಿ.',add:'ಸೇರಿಸಿ',call:'ಕರೆ',
+greet:'ನಮಸ್ಕಾರ',home:'ಮುಖಪುಟ',store:'ಸಂಗ್ರಹ',sell:'ಮಾರಿ',loan:'ಹಣ',help:'ಸಹಾಯ',stockVal:'ನನ್ನ ಧಾನ್ಯದ ಮೌಲ್ಯ',noGrain:'ನಿಮ್ಮ ಧಾನ್ಯ ಸೇರಿಸಿ, ಅದರ ಮೌಲ್ಯ ಮತ್ತು ಇಡಬೇಕೇ ಮಾರಬೇಕೇ ನೋಡಿ.',addGrain:'ನನ್ನ ಧಾನ್ಯ ಸೇರಿಸಿ',hold:'ಇಡಿ',holdTag:'ಕಾಯಿರಿ',sellTag:'ಈಗ ಮಾರಿ',pays:'ಇಟ್ಟರೆ ಲಾಭ ಸುಮಾರು',loses:'ಇಟ್ಟರೆ ನಷ್ಟ ಸುಮಾರು',setLater:'ನಂತರದ ನಿರೀಕ್ಷಿತ ಬೆಲೆ ಬರೆಯಿರಿ, ಆಗ ಇಡಬೇಕೇ ಮಾರಬೇಕೇ ಹೇಳುತ್ತೇವೆ.',sellNow:'ಈಗ ಮಾರಿ',seeStore:'ನನ್ನ ಧಾನ್ಯ ನೋಡಿ',
+msp:'ಸರ್ಕಾರಿ ಬೆಂಬಲ ಬೆಲೆ (MSP)',perq:'ಪ್ರತಿ ಕ್ವಿಂಟಾಲ್',q:'ಕ್ವಿಂಟಾಲ್',bags:'ಚೀಲ',priceCheck:'ಬೆಲೆ ನೋಡಿ',priceCheckS:'ಖರೀದಿದಾರರ ಬೆಲೆ ಸರಿಯೇ? MSP ಜೊತೆ ಹೋಲಿಸಿ.',loanS:'ಇಟ್ಟ ಧಾನ್ಯದ ಮೇಲೆ ಎಷ್ಟು ಸಾಲ ಸಿಗಬಹುದು',services:'ಕೃಷಿ ಸೇವೆಗಳು',servicesS:'ಮಣ್ಣು ಪರೀಕ್ಷೆ, ಸಿಂಪಡಣೆ, ಹವಾಮಾನ',learn:'1 ನಿಮಿಷದಲ್ಲಿ ಕಲಿಯಿರಿ',learnS:'MSP, ಗೋದಾಮು ಸಾಲ, ಒಣಗಿಸುವುದು, ತೂಕ',kcc:'ಕಿಸಾನ್ ಕಾಲ್ ಸೆಂಟರ್ (ಉಚಿತ)',kccS:'ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲಿ ಕೃಷಿ ಪ್ರಶ್ನೆಗಳು, ಬೆಳಿಗ್ಗೆ 6 ರಿಂದ ರಾತ್ರಿ 10',speak:'ಮಾತನಾಡಿ ಮಾರಿ',
+crop:'ಬೆಳೆ',offered:'ಖರೀದಿದಾರರು ಹೇಳಿದ ಬೆಲೆ (₹ ಪ್ರತಿ ಕ್ವಿಂಟಾಲ್)',qty:'ಎಷ್ಟು ಕ್ವಿಂಟಾಲ್',comm:'ಕಮಿಷನ್ (%)',trans:'ಸಾಗಣೆ ಮತ್ತು ಲೋಡಿಂಗ್ (₹ ಒಟ್ಟು)',take:'ನಿಮ್ಮ ಕೈಗೆ ಸಿಗುವುದು',below:'MSP ಗಿಂತ ಕಡಿಮೆ ಪ್ರತಿ ಕ್ವಿಂಟಾಲ್',above:'MSP ಗಿಂತ ಹೆಚ್ಚು ಪ್ರತಿ ಕ್ವಿಂಟಾಲ್',tip:'ಮಾರುವ ಮೊದಲು ನಿಮ್ಮ ಜಿಲ್ಲೆಯ ಸರ್ಕಾರಿ ಖರೀದಿ ಕೇಂದ್ರದ ಬಗ್ಗೆ ಕೇಳಿ.',enter:'MSP ಜೊತೆ ಹೋಲಿಸಲು ಖರೀದಿದಾರರು ಹೇಳಿದ ಬೆಲೆ ಬರೆಯಿರಿ.',listen:'ಕೇಳಿ',share:'WhatsApp ನಲ್ಲಿ ಕಳುಹಿಸಿ',
+sellT:'ಧಾನ್ಯ ಇದೆ ಎಂದು ಖರೀದಿದಾರರಿಗೆ ತಿಳಿಸಿ',sellS:'ಸಂದೇಶವನ್ನು ನಾವು ಬರೆಯುತ್ತೇವೆ. ನೀವು ವ್ಯಾಪಾರಿಗಳಿಗೆ, FPO ಅಥವಾ WhatsApp ಗುಂಪಿಗೆ ಕಳುಹಿಸಿ.',yp:'ನಿಮ್ಮ ಬೆಲೆ (₹ ಪ್ರತಿ ಕ್ವಿಂಟಾಲ್)',place:'ಗ್ರಾಮ ಮತ್ತು ಜಿಲ್ಲೆ',ready:'ಯಾವಾಗಿನಿಂದ ಸಿದ್ಧ',msg:'ನಿಮ್ಮ ಸಂದೇಶ',send:'WhatsApp ನಲ್ಲಿ ಕಳುಹಿಸಿ',save:'ನನ್ನ ಧಾನ್ಯದಲ್ಲಿ ಉಳಿಸಿ',saved:'ಈ ಫೋನಿನಲ್ಲಿ ಉಳಿಸಲಾಗಿದೆ',say:'ಮಾತನಾಡಿ ಹೇಳಿ',noVoice:'ಈ ಫೋನಿನಲ್ಲಿ ಧ್ವನಿ ಟೈಪಿಂಗ್ ಲಭ್ಯವಿಲ್ಲ. ದಯವಿಟ್ಟು ಟೈಪ್ ಮಾಡಿ.',need:'ಮೊದಲು ಬೆಳೆ, ಪ್ರಮಾಣ ಮತ್ತು ಬೆಲೆ ತುಂಬಿ.',
+tmpl:'ನಮಸ್ಕಾರ. {pl} ನಲ್ಲಿ ನನ್ನ ಬಳಿ {q} ಕ್ವಿಂಟಾಲ್ {c} ಮಾರಾಟಕ್ಕಿದೆ. ನನ್ನ ಬೆಲೆ: ₹{p} ಪ್ರತಿ ಕ್ವಿಂಟಾಲ್.{d} ದಯವಿಟ್ಟು ಕರೆ ಮಾಡಿ ಅಥವಾ WhatsApp ನಲ್ಲಿ ಉತ್ತರಿಸಿ.',rd:' {d} ರಿಂದ ಸಿದ್ಧ.',
+myGrain:'ನನ್ನ ಧಾನ್ಯ',where:'ಎಲ್ಲಿ ಇಟ್ಟಿದ್ದೀರಿ?',athome:'ಮನೆಯಲ್ಲಿ',inwh:'ಗೋದಾಮಿನಲ್ಲಿ',whName:'ಗೋದಾಮಿನ ಹೆಸರು ಅಥವಾ ಸ್ಥಳ',receipt:'ರಸೀದಿ ಸಂಖ್ಯೆ (ಐಚ್ಛಿಕ)',onphone:'ಈ ಫೋನಿನಲ್ಲಿ ಮಾತ್ರ ಉಳಿಯುತ್ತದೆ. ಎಲ್ಲಿಗೂ ಕಳುಹಿಸುವುದಿಲ್ಲ.',del:'ತೆಗೆದುಹಾಕಿ',holdQ:'ಇಡಲೇ ಮಾರಲೇ?',today:'ಇಂದಿನ ಬೆಲೆ (₹ ಪ್ರತಿ ಕ್ವಿಂಟಾಲ್)',later:'ನಂತರದ ನಿರೀಕ್ಷಿತ ಬೆಲೆ (₹ ಪ್ರತಿ ಕ್ವಿಂಟಾಲ್)',months:'ಎಷ್ಟು ತಿಂಗಳು ಇಡುವುದು',rent:'ಬಾಡಿಗೆ (₹ ಪ್ರತಿ ಕ್ವಿಂಟಾಲ್ ಪ್ರತಿ ತಿಂಗಳು)',takeOut:'ಧಾನ್ಯ ಹೊರತೆಗೆಯಿರಿ',gate:'ಗೋದಾಮಿನ ಗೇಟಿನಲ್ಲಿ',g1:'ತೂಕವನ್ನು ಎದುರಲ್ಲೇ ನೋಡಿ, ಮೊದಲು ತಕ್ಕಡಿ ಸೊನ್ನೆ ತೋರಿಸುತ್ತಿದೆಯೇ ಪರಿಶೀಲಿಸಿ.',g2:'ತೇವಾಂಶ ಪರೀಕ್ಷೆ ಮಾಡಿಸಿ, ಬರೆದುಕೊಳ್ಳಿ.',g3:'ತೂಕದ ಚೀಟಿ ಮತ್ತು ರಸೀದಿಯನ್ನು ಜೋಪಾನವಾಗಿಡಿ.',
+which:'ಯಾವ ದಾಸ್ತಾನು?',howMany:'ಎಷ್ಟು ಚೀಲ?',confirm:'ನೋಡಿ ಕಳುಹಿಸಿ',relMsg:'ನಮಸ್ಕಾರ. ದಯವಿಟ್ಟು ನನ್ನ ದಾಸ್ತಾನಿನಿಂದ {c} {b} ಚೀಲ ({q} ಕ್ವಿಂಟಾಲ್) ಬಿಡುಗಡೆ ಮಾಡಿ.{r} ನಾನು {d} ರಂದು ತೆಗೆದುಕೊಳ್ಳುತ್ತೇನೆ.',relR:' ರಸೀದಿ ಸಂಖ್ಯೆ: {r}.',collect:'ತೆಗೆದುಕೊಳ್ಳುವ ದಿನ',sendWh:'WhatsApp ನಲ್ಲಿ ವಿನಂತಿ ಕಳುಹಿಸಿ',back:'ಹಿಂದೆ',next:'ಮುಂದೆ',
+loanT:'ಇಟ್ಟ ಧಾನ್ಯದ ಮೇಲೆ ಸಾಲ',loanS2:'ಬ್ಯಾಂಕಿಗೆ ಹೋಗುವ ಮೊದಲು ಮೊತ್ತ ನೋಡಿ.',price:'ಬೆಲೆ (₹ ಪ್ರತಿ ಕ್ವಿಂಟಾಲ್)',rate:'ಬಡ್ಡಿ ದರ (% ವಾರ್ಷಿಕ)',rateHint:'ನಿಖರ ದರವನ್ನು ನಿಮ್ಮ ಬ್ಯಾಂಕಿನಲ್ಲಿ ಕೇಳಿ.',canGet:'ನಿಮಗೆ ಸುಮಾರು ಇಷ್ಟು ಸಿಗಬಹುದು',intr:'ಈ ಅವಧಿಯ ಬಡ್ಡಿ',repay:'ಮಾರಿದಾಗ ತೀರಿಸಿ',l1:'WDRA ನೋಂದಾಯಿತ ಗೋದಾಮಿನಲ್ಲಿ ಇಟ್ಟು e-NWR ರಸೀದಿ ಪಡೆಯಿರಿ.',l2:'e-NWR ಅನ್ನು ಬ್ಯಾಂಕಿಗೆ ಕೊಂಡೊಯ್ಯಿರಿ. ಹಲವು ಬ್ಯಾಂಕುಗಳು ಧಾನ್ಯದ ಮೌಲ್ಯದ ಸುಮಾರು 70% ನೀಡುತ್ತವೆ.',l3:'ಸರಿಯಾದ ಬೆಲೆಗೆ ಮಾರಿ. ಸಾಲ ಮಾರಾಟದಿಂದ ತೀರುತ್ತದೆ.',
+soilT:'ಉಚಿತ ಮಣ್ಣು ಪರೀಕ್ಷೆ',soilS:'ಮಣ್ಣು ಆರೋಗ್ಯ ಕಾರ್ಡ್ ಮತ್ತು ಸರಿಯಾದ ಗೊಬ್ಬರದ ಪ್ರಮಾಣ ಪಡೆಯಿರಿ.',sprayT:'ಸಿಂಪಡಣೆ ಕೇಳಿ',sprayS:'ನಿಮ್ಮ FPO, KVK ಅಥವಾ ಡ್ರೋನ್ ಆಪರೇಟರ್‌ಗೆ ವಿನಂತಿ ಕಳುಹಿಸಿ.',acres:'ಎಕರೆ',date:'ಸುಮಾರು ದಿನಾಂಕ',sprayMsg:'ನಮಸ್ಕಾರ. {pl} ನಲ್ಲಿ {a} ಎಕರೆ {c} ಗೆ ಸುಮಾರು {d} ರಂದು ಸಿಂಪಡಣೆ ಬೇಕು. ದರ ಮತ್ತು ದಿನಾಂಕ ತಿಳಿಸಿ.',wxT:'ಹವಾಮಾನ',wxS:'IMD ಯಿಂದ ಜಿಲ್ಲಾ ಮುನ್ಸೂಚನೆ.',open:'ತೆರೆಯಿರಿ',
+helpT:'ಸಹಾಯ',links:'ಉಪಯುಕ್ತ ಸರ್ಕಾರಿ ಜಾಲತಾಣಗಳು',shareApp:'KrishiLink ಅನ್ನು ಸ್ನೇಹಿತರಿಗೆ ಕಳುಹಿಸಿ',switchRole:'ಪಾತ್ರ ಬದಲಿಸಿ'}
+};
+var LEARN=[
+ {t:{en:'What is MSP and how to use it',hi:'MSP क्या है और कैसे काम आए',kn:'MSP ಎಂದರೇನು, ಹೇಗೆ ಬಳಸುವುದು'},p:{en:'MSP is the price the government fixes for notified crops each season. If a buyer offers less, ask your district’s government purchase centre whether your crop is being bought this season.',hi:'MSP वह दाम है जो सरकार हर सीज़न कुछ फसलों के लिए तय करती है। अगर खरीदार कम दे, तो अपने जिले के सरकारी खरीद केंद्र से पूछें कि इस सीज़न में आपकी फसल खरीदी जा रही है या नहीं।',kn:'MSP ಎಂದರೆ ಪ್ರತಿ ಹಂಗಾಮಿನಲ್ಲಿ ಕೆಲವು ಬೆಳೆಗಳಿಗೆ ಸರ್ಕಾರ ನಿಗದಿಪಡಿಸುವ ಬೆಲೆ. ಖರೀದಿದಾರರು ಕಡಿಮೆ ಕೊಟ್ಟರೆ, ಈ ಹಂಗಾಮಿನಲ್ಲಿ ನಿಮ್ಮ ಬೆಳೆ ಖರೀದಿಯಾಗುತ್ತಿದೆಯೇ ಎಂದು ಜಿಲ್ಲೆಯ ಸರ್ಕಾರಿ ಖರೀದಿ ಕೇಂದ್ರದಲ್ಲಿ ಕೇಳಿ.'}},
+ {t:{en:'Loan on grain in a warehouse (e-NWR)',hi:'गोदाम के अनाज पर लोन (e-NWR)',kn:'ಗೋದಾಮಿನ ಧಾನ್ಯದ ಮೇಲೆ ಸಾಲ (e-NWR)'},p:{en:'Store grain in a WDRA-registered warehouse and you get an electronic receipt (e-NWR). Banks lend against it, so you get money now and can sell later when the price is better.',hi:'WDRA-पंजीकृत गोदाम में अनाज रखने पर इलेक्ट्रॉनिक रसीद (e-NWR) मिलती है। बैंक इस पर लोन देते हैं, यानी पैसा अभी और बिक्री बाद में अच्छे दाम पर।',kn:'WDRA ನೋಂದಾಯಿತ ಗೋದಾಮಿನಲ್ಲಿ ಧಾನ್ಯ ಇಟ್ಟರೆ ಎಲೆಕ್ಟ್ರಾನಿಕ್ ರಸೀದಿ (e-NWR) ಸಿಗುತ್ತದೆ. ಬ್ಯಾಂಕುಗಳು ಇದರ ಮೇಲೆ ಸಾಲ ಕೊಡುತ್ತವೆ, ಅಂದರೆ ಹಣ ಈಗ, ಮಾರಾಟ ನಂತರ ಒಳ್ಳೆಯ ಬೆಲೆಗೆ.'}},
+ {t:{en:'Dry grain before storing',hi:'रखने से पहले अनाज सुखाएं',kn:'ಇಡುವ ಮೊದಲು ಧಾನ್ಯ ಒಣಗಿಸಿ'},p:{en:'Wet grain heats up, gets fungus and loses weight in storage. Dry it well, ask for a moisture reading at the warehouse gate and keep the slip.',hi:'गीला अनाज भंडार में गर्म होता है, फफूंद लगती है और वज़न घटता है। अच्छी तरह सुखाएं, गोदाम के गेट पर नमी की जांच करवाएं और पर्ची रखें।',kn:'ಒದ್ದೆ ಧಾನ್ಯ ಸಂಗ್ರಹದಲ್ಲಿ ಬಿಸಿಯಾಗುತ್ತದೆ, ಬೂಷ್ಟು ಬರುತ್ತದೆ, ತೂಕ ಕಡಿಮೆಯಾಗುತ್ತದೆ. ಚೆನ್ನಾಗಿ ಒಣಗಿಸಿ, ಗೋದಾಮಿನ ಗೇಟಿನಲ್ಲಿ ತೇವಾಂಶ ಪರೀಕ್ಷಿಸಿ, ಚೀಟಿ ಇಟ್ಟುಕೊಳ್ಳಿ.'}},
+ {t:{en:'Check the weighing',hi:'तौल की जांच करें',kn:'ತೂಕವನ್ನು ಪರಿಶೀಲಿಸಿ'},p:{en:'Watch your grain being weighed and check the scale shows zero before loading. Always ask for a written weighment slip.',hi:'अपने अनाज की तौल सामने देखें और लादने से पहले कांटा शून्य पर है यह जांचें। हमेशा लिखित तौल पर्ची मांगें।',kn:'ನಿಮ್ಮ ಧಾನ್ಯದ ತೂಕವನ್ನು ಎದುರಲ್ಲೇ ನೋಡಿ, ಹಾಕುವ ಮೊದಲು ತಕ್ಕಡಿ ಸೊನ್ನೆ ತೋರಿಸುತ್ತಿದೆಯೇ ಪರಿಶೀಲಿಸಿ. ಯಾವಾಗಲೂ ಬರಹದ ತೂಕದ ಚೀಟಿ ಕೇಳಿ.'}},
+ {t:{en:'Selling on eNAM',hi:'eNAM पर बेचना',kn:'eNAM ನಲ್ಲಿ ಮಾರಾಟ'},p:{en:'eNAM lets you sell in connected mandis online and get paid to your bank. Register at your nearest eNAM mandi with your Aadhaar and bank details.',hi:'eNAM पर आप जुड़ी हुई मंडियों में ऑनलाइन बेच सकते हैं और पैसा बैंक में आता है। नज़दीकी eNAM मंडी में आधार और बैंक विवरण के साथ पंजीकरण करें।',kn:'eNAM ಮೂಲಕ ಜೋಡಿಸಿದ ಮಂಡಿಗಳಲ್ಲಿ ಆನ್‌ಲೈನ್ ಮಾರಿ, ಹಣ ಬ್ಯಾಂಕಿಗೆ ಬರುತ್ತದೆ. ಹತ್ತಿರದ eNAM ಮಂಡಿಯಲ್ಲಿ ಆಧಾರ್ ಮತ್ತು ಬ್ಯಾಂಕ್ ವಿವರಗಳೊಂದಿಗೆ ನೋಂದಾಯಿಸಿ.'}}
+];
+function t(k){var d=T[lang]||T.en;return d[k]!=null?d[k]:(T.en[k]!=null?T.en[k]:k)}
+function tc(k){return ((CN[lang]||CN.en)[k])||CN.en[k]||k}
+function L(o){return o[lang]||o.en}
+function speak(txt){var ok=false;try{if('speechSynthesis' in window){var u=new SpeechSynthesisUtterance(txt);u.lang={hi:'hi-IN',kn:'kn-IN',en:'en-IN'}[lang||'en'];speechSynthesis.cancel();speechSynthesis.speak(u);ok=true}}catch(e){}if(!ok)toast(txt)}
+function fmtDate(d){if(!d)return '';try{return new Date(d).toLocaleDateString((lang||'en')+'-IN',{day:'numeric',month:'short'})}catch(e){return d}}
+
+/* ---- icons ---- */
+var IC={home:'<path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/>',store:'<path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/>',sell:'<path d="M4 7h13l-3-3M20 17H7l3 3"/>',loan:'<path d="M6 4h12M6 9h12M14 4c0 6-8 5-8 5l9 11"/>',help:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 015 .5c0 2-2.5 2-2.5 4M12 17v.01"/>',phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/>',leaf:'<path d="M12 21V9"/><path d="M12 13c-3 0-5-2-5-5 3 0 5 2 5 5zM12 11c3 0 5-2 5-5-3 0-5 2-5 5z"/>',people:'<circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6M16 4.5a3.5 3.5 0 010 7M18 14c2 .6 3 2.6 3 6"/>',fpo:'<path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M10 21v-5h4v5"/>',doc:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',chev:'<path d="M9 6l6 6-6 6"/>',back:'<path d="M15 6l-6 6 6 6"/>',tag:'<path d="M20 12l-8 8-9-9V3h8z"/><circle cx="7.5" cy="7.5" r="1.5"/>',spk:'<path d="M11 5L6 9H3v6h3l5 4zM16 9a4 4 0 010 6M19 6a8 8 0 010 12"/>',mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/>',wa:'<path d="M21 12a8.5 8.5 0 01-12.6 7.4L3 21l1.7-5.2A8.5 8.5 0 1121 12z"/>',ext:'<path d="M14 4h6v6M20 4l-9 9M19 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1h5"/>',qr:'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/>',book:'<path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19a2 2 0 012-2h13"/>',drop:'<path d="M12 3s6 7 6 11a6 6 0 01-12 0c0-4 6-11 6-11z"/>',cloud:'<path d="M7 16a4 4 0 01-.5-8A6 6 0 0118 9a3.5 3.5 0 01-.5 7"/><path d="M9 19l-1 2M13 19l-1 2M17 19l-1 2"/>',calc:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M16 11v6M8 15h2M12 15h2"/>',check:'<path d="M5 12l5 5L20 7"/>',plus:'<path d="M12 5v14M5 12h14"/>',msg:'<path d="M21 12a8.5 8.5 0 01-12.6 7.4L3 21l1.7-5.2A8.5 8.5 0 1121 12z"/><path d="M8 11h8M8 14h5"/>',truck:'<path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>',star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>'};
+function ic(n,s){return '<svg width="'+(s||24)+'" height="'+(s||24)+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(IC[n]||'')+'</svg>'}
+function row(href,icon,title,sub,cls,icls){return '<a class="rowlink '+(cls||'')+'" href="'+href+'"><span class="ico '+(icls||'')+'">'+ic(icon)+'</span><span class="tx"><b>'+title+'</b>'+(sub?'<span>'+sub+'</span>':'')+'</span><span class="chev">'+ic('chev',20)+'</span></a>'}
+function ext(k,label){return '<a class="ext" href="'+EXT[k][0]+'" target="_blank" rel="noopener"><span>'+(label||EXT[k][1])+'</span>'+ic('ext',18)+'</a>'}
+function fld(lbl,inner){return '<label class="f"><span>'+lbl+'</span>'+inner+'</label>'}
+function inp(id,val,ph,type){type=type||'number';return '<input id="'+id+'" class="in" type="'+type+'"'+(type==='number'?' inputmode="decimal" min="0"':'')+' value="'+esc(val==null?'':val)+'" placeholder="'+esc(ph||'')+'">'}
+function cropSel(id,v){return '<select id="'+id+'" class="in">'+Object.keys(MSP).map(function(k){return '<option value="'+k+'"'+(k===v?' selected':'')+'>'+tc(k)+'</option>'}).join('')+'</select>'}
+function val(id){var e=document.getElementById(id);return e?e.value:''}
+function nval(id){return +val(id)||0}
+function spkBtn(txt,dark){return '<button class="b gh sm" type="button" data-say="'+esc(txt)+'"'+(dark?'':'')+'>'+ic('spk',20)+t('listen')+'</button>'}
+/* ================= START ================= */
+function vLang(){var stalks='';for(var i=0;i<14;i++){var x=14+i*24,h=38+((i*37)%40);stalks+='<path d="M'+x+' 160 Q'+(x+6)+' '+(160-h/2)+' '+(x+2)+' '+(160-h)+'" /><ellipse cx="'+(x+2)+'" cy="'+(160-h-9)+'" rx="4.5" ry="11" />'}
+return {title:'',body:'<div class="wl"><div class="wl-card"><svg class="wl-field" viewBox="0 54 360 106" aria-hidden="true" preserveAspectRatio="xMidYMax meet">'+stalks+'</svg><div class="logo wl-logo"><i>'+ic('leaf',24)+'</i>KrishiLink</div><p class="wl-t">Hold your harvest.<br>Sell at the right price.</p></div><h2 class="wl-q">अपनी भाषा चुनें<br>ನಿಮ್ಮ ಭಾಷೆ ಆರಿಸಿ<br>Choose your language</h2><div class="wl-langs">'+[['hi','हिंदी','Hindi'],['kn','ಕನ್ನಡ','Kannada'],['en','English','English']].map(function(l){return '<button class="wl-b" type="button" data-lang="'+l[0]+'"><b>'+l[1]+'</b>'+(l[0]!=='en'?'<span>'+l[2]+'</span>':'')+ic('chev',22)+'</button>'}).join('')+'</div><p class="wl-f">Free. Your numbers stay on your phone.</p></div>'}}
+function vStart(){
+  return {title:'',hdr:'<a class="logo" href="#home" style="flex:1;text-decoration:none;color:inherit"><i>'+ic('leaf',24)+'</i>KrishiLink</a><a class="b gh sm" href="tel:'+KCC+'">'+ic('phone',18)+t('call')+'</a>',
+  body:'<div class="chips">'+[['hi','हिंदी'],['kn','ಕನ್ನಡ'],['en','English']].map(function(l){return '<button class="chip" type="button" data-lang="'+l[0]+'" aria-pressed="'+(lang===l[0])+'">'+l[1]+'</button>'}).join('')+'</div>'+
+  '<div><h2 class="h2">'+t('who')+'</h2><p class="mut" style="margin:4px 0 0">'+t('whoSub')+'</p></div>'+
+  row('#farmer','leaf',t('farmer'),t('farmerS'),'pri')+row('#crp','people',t('crp'),t('crpS'))+row('#fpo','fpo',t('fpo'),t('fpoS'))+row('#trader','sell',t('trader'),t('traderS'),'','a')+row('#buyer','doc',t('buyer'),t('buyerS'),'','a')+
+  '<a class="c dk" href="#farmer-store" style="display:flex;align-items:center;gap:12px;text-decoration:none"><span class="amber">'+ic('qr',28)+'</span><span style="flex:1">'+t('slip')+'</span><b class="amber">'+t('add')+'</b></a>'}
+}
+
+/* ================= FARMER ================= */
+function grainList(){return S.get('grain',[])}
+function priceOf(g){return +g.today||MSP[g.crop][0]}
+function rentOf(g){return g.rent!=null?+g.rent:(g.where==='wh'?8:0)}
+function holdCalc(g){if(!g.later)return null;return g.q*(g.later-priceOf(g))-g.q*rentOf(g)*(g.months!=null?+g.months:3)}
+function vFHome(){
+  var g=grainList(),tot=g.reduce(function(s,x){return s+x.q*priceOf(x)},0),tq=g.reduce(function(s,x){return s+x.q},0);
+  var hero;
+  if(g.length){
+    var f=g[0],hc=holdCalc(f),sig;
+    if(hc==null)sig='<p class="mut2" style="margin:0">'+t('setLater')+'</p>';
+    else if(hc>0)sig='<span class="tag am">'+t('holdTag')+'</span><div style="font-size:20px;font-weight:700;margin-top:8px">'+tc(f.crop)+': '+t('pays')+' '+inr(hc)+'</div>';
+    else sig='<span class="tag gr">'+t('sellTag')+'</span><div style="font-size:20px;font-weight:700;margin-top:8px">'+tc(f.crop)+': '+t('loses')+' '+inr(-hc)+'</div>';
+    hero='<div class="c dk"><div class="lbl">'+t('stockVal')+'</div><div class="hv amber">'+inr(tot)+'</div><div class="mut2">'+tq+' '+t('q')+': '+g.map(function(x){return tc(x.crop)+' '+x.q}).join(', ')+'</div><div class="sep"></div>'+sig+
+    '<div class="row2" style="margin-top:14px"><a class="b am" href="#farmer-sell">'+t('sellNow')+'</a><a class="b gh" href="#farmer-store">'+t('seeStore')+'</a></div></div>';
+  }else hero='<div class="c dk"><div class="lbl">'+t('stockVal')+'</div><p style="font-size:20px;font-weight:600;margin:6px 0 14px">'+t('noGrain')+'</p><a class="b am big" href="#farmer-store">'+ic('plus',20)+t('addGrain')+'</a></div>';
+  var mc=g.length?g[0].crop:'wheat';
+  return {title:'',hdr:'<div style="flex:1"><div style="font-size:24px;font-weight:700">'+t('greet')+'</div></div><a class="back" href="#start" aria-label="'+esc(t('switchRole'))+'">'+({hi:'अ',kn:'ಅ',en:'A'}[lang])+'</a>',
+  body:hero+
+  '<a class="c" href="#farmer-price" style="text-decoration:none;color:inherit;display:block"><div class="lbl">'+t('msp')+', '+tc(mc)+'</div><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><b style="font-size:30px">'+inr(MSP[mc][0])+'</b><span class="mut">'+t('perq')+'</span></div><div style="color:var(--green);font-weight:700;margin-top:6px">'+t('priceCheckS')+'</div></a>'+
+  row('#farmer-loan','loan',t('loanT'),t('loanS'),'','a')+row('#farmer-services','drop',t('services'),t('servicesS'))+row('#farmer-learn','book',t('learn'),t('learnS'))+
+  '<a class="c dk" href="tel:'+KCC+'" style="display:flex;gap:12px;align-items:center;text-decoration:none;color:#fff"><span class="amber">'+ic('phone',26)+'</span><span style="flex:1"><b>'+t('kcc')+'</b><br><span class="mut2" style="font-size:15px">'+t('kccS')+'</span></span><b class="amber">1800 180 1551</b></a>',
+  fab:'<a class="fab" href="#farmer-sell">'+ic('mic',22)+t('speak')+'</a>'};
+}
+function vFPrice(){return {title:t('priceCheck'),body:
+  '<div class="c stack">'+fld(t('crop'),cropSel('pc','wheat'))+'<div class="mini" style="display:flex;justify-content:space-between;align-items:baseline"><small style="font-size:15px">'+t('msp')+'</small><b id="pMsp"></b></div>'+fld(t('offered'),inp('po','', '2400'))+fld(t('qty'),inp('pq',10))+'<div class="grid2">'+fld(t('comm'),inp('pcm',2))+fld(t('trans'),inp('ptr',0))+'</div></div>'+
+  '<div class="c dk" id="pOut"></div>'+ext('agm')+ext('enam')+'<p class="src">'+MSPSRC+'</p>',calc:calcPrice}}
+function calcPrice(){
+  var c=val('pc'),m=MSP[c][0];$('#pMsp').textContent=inr(m)+' '+t('perq');
+  var p=nval('po'),q=nval('pq'),cm=nval('pcm'),tr=nval('ptr'),o=$('#pOut');
+  if(!p){o.innerHTML='<p style="margin:0;font-size:18px">'+t('enter')+'</p>';return}
+  var gross=p*q,net=gross*(1-cm/100)-tr,d=p-m;
+  var say=t('take')+' '+inr(net)+'. '+(d<0?inr(-d)+' '+t('below'):inr(d)+' '+t('above'));
+  o.innerHTML='<div class="lbl">'+t('take')+'</div><div class="hv amber">'+inr(net)+'</div><div class="mut2">'+q+' '+t('q')+' × '+inr(p)+' = '+inr(gross)+'</div><div class="flag '+(d<0?'bad':'ok')+'" style="margin-top:12px">'+(d<0?inr(-d)+' '+t('below'):inr(d)+' '+t('above'))+'</div>'+(d<0?'<p style="margin:10px 0 0">'+t('tip')+'</p>':'')+
+  '<div class="row2" style="margin-top:14px">'+spkBtn(say)+'<a class="b gh sm" href="'+wa(tc(c)+': '+say)+'" target="_blank" rel="noopener">'+ic('wa',20)+t('share')+'</a></div>';
+}
+function vFSell(){return {title:t('sellT'),body:
+  '<p class="mut" style="margin:0">'+t('sellS')+'</p><div class="c stack">'+fld(t('crop'),cropSel('sc','wheat'))+
+  '<label class="f"><span>'+t('qty')+'</span><div style="display:flex;gap:8px">'+inp('sq','','20')+'<button class="b" type="button" data-mic="sq" aria-label="'+esc(t('say'))+'" style="width:52px;padding:0;flex:none">'+ic('mic',22)+'</button></div></label>'+
+  fld(t('yp'),inp('sp','','2600'))+fld(t('place'),inp('spl','','','text'))+fld(t('ready'),inp('sd','','','date'))+'</div>'+
+  '<div class="c"><div class="lbl">'+t('msg')+'</div><p class="msg" id="sMsg"></p></div>'+
+  '<a class="b big" id="sSend" href="#" target="_blank" rel="noopener" style="background:#1E7A49">'+ic('wa',22)+t('send')+'</a><button class="b gh big" type="button" data-act="sellSave">'+t('save')+'</button>',calc:calcSell}}
+function calcSell(){
+  var c=val('sc'),q=val('sq'),p=val('sp'),pl=val('spl').trim(),d=val('sd');
+  var m=t('tmpl').replace('{q}',q||'__').replace('{c}',tc(c)).replace('{pl}',pl||'__').replace('{p}',p?(+p).toLocaleString('en-IN'):'__').replace('{d}',d?t('rd').replace('{d}',fmtDate(d)):'');
+  $('#sMsg').textContent=m;$('#sSend').href=wa(m);return {c:c,q:+q,p:+p,pl:pl};
+}
+var addWhere='home',rel=null;
+function vFStore(){
+  var g=grainList();
+  var cards=g.map(function(x,i){
+    var hc=holdCalc(x);
+    return '<div class="c" data-gi="'+i+'"><div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><div><b style="font-size:20px">'+tc(x.crop)+', '+x.q+' '+t('q')+'</b><div class="mut" style="font-size:15px">'+(x.where==='wh'?t('inwh'):t('athome'))+(x.pl?', '+esc(x.pl):'')+(x.r?'. #'+esc(x.r):'')+'</div></div><button class="x" type="button" data-act="gdel" data-i="'+i+'">'+t('del')+'</button></div>'+
+    '<div class="grid3" style="margin-top:12px"><div class="mini"><small>'+t('q')+'</small><b>'+x.q+'</b></div><div class="mini"><small>'+t('bags')+'</small><b>'+(x.q*2)+'</b></div><div class="mini"><small>'+t('perq')+'</small><b>'+inr(priceOf(x))+'</b></div></div>'+
+    '<details style="margin-top:10px"'+(i===0?' open':'')+'><summary style="min-height:48px;display:flex;align-items:center;font-weight:700;color:var(--green);cursor:pointer">'+t('holdQ')+'</summary><div class="stack">'+
+    fld(t('today'),'<input class="in" data-gf="today" type="number" inputmode="decimal" value="'+priceOf(x)+'">')+fld(t('later'),'<input class="in" data-gf="later" type="number" inputmode="decimal" value="'+(x.later||'')+'">')+
+    '<div class="grid2">'+fld(t('months'),'<input class="in" data-gf="months" type="number" inputmode="numeric" value="'+(x.months||3)+'">')+fld(t('rent'),'<input class="in" data-gf="rent" type="number" inputmode="decimal" value="'+(x.rent!=null?x.rent:(x.where==='wh'?8:0))+'">')+'</div><div data-gres></div></div></details>'+
+    (x.where==='wh'?'<button class="b gh big" type="button" data-act="relStart" data-i="'+i+'" style="margin-top:10px">'+t('takeOut')+'</button>':'')+'</div>';
+  }).join('');
+  return {title:t('myGrain'),body:(rel?relView():'')+cards+
+  '<div class="c stack"><b style="font-size:18px">'+t('addGrain')+'</b>'+fld(t('crop'),cropSel('gc','wheat'))+fld(t('qty'),inp('gq','','20'))+
+  '<div class="f"><span>'+t('where')+'</span><div class="seg"><button type="button" data-where="home" aria-pressed="'+(addWhere==='home')+'">'+t('athome')+'</button><button type="button" data-where="wh" aria-pressed="'+(addWhere==='wh')+'">'+t('inwh')+'</button></div></div>'+
+  fld(t('whName'),inp('gpl','','','text'))+fld(t('receipt'),inp('gr','','','text'))+'<button class="b big" type="button" data-act="gadd">'+ic('plus',20)+t('add')+'</button><p class="src">'+t('onphone')+'</p></div>'+
+  '<div class="c"><b style="font-size:18px">'+t('gate')+'</b>'+['g1','g2','g3'].map(function(k){return '<div class="check" style="cursor:default">'+ic('check',22)+'<span>'+t(k)+'</span></div>'}).join('')+'</div>'+ext('wdra'),calc:calcStore}}
+function calcStore(){
+  $$('[data-gi]').forEach(function(card){
+    var g=grainList()[+card.dataset.gi],res=card.querySelector('[data-gres]');if(!g||!res)return;
+    var hc=holdCalc(g);
+    res.innerHTML=hc==null?'<p class="mut" style="margin:0">'+t('setLater')+'</p>':'<div class="flag '+(hc>0?'ok':'bad')+'">'+(hc>0?t('holdTag')+'. '+t('pays')+' '+inr(hc):t('sellTag')+'. '+t('loses')+' '+inr(-hc))+'</div>';
+  });
+}
+function relView(){
+  var g=grainList()[rel.i];if(!g){rel=null;return ''}
+  var maxB=g.q*2,b=Math.min(rel.b,maxB);
+  var dots='<div class="dots">'+[1,2,3].map(function(s){return '<i class="'+(s<=rel.s?'on':'')+'"></i>'}).join('')+'</div>';
+  var body='';
+  if(rel.s===1)body='<b style="font-size:20px">'+t('which')+'</b><div class="mini" style="margin-top:8px"><b>'+tc(g.crop)+', '+g.q+' '+t('q')+'</b><small>'+esc(g.pl||'')+'</small></div><div class="row2" style="margin-top:12px"><button class="b gh" type="button" data-act="relX">'+t('back')+'</button><button class="b am" type="button" data-act="relGo" data-s="2">'+t('next')+'</button></div>';
+  else if(rel.s===2)body='<b style="font-size:20px">'+t('howMany')+'</b><div class="step" style="margin:12px 0"><button type="button" data-act="relB" data-d="-10" aria-label="-10">−</button><div class="v"><b class="amber">'+b+'</b><span>'+t('bags')+', '+(b/2)+' '+t('q')+'</span></div><button type="button" data-act="relB" data-d="10" aria-label="+10">+</button></div><div class="row2"><button class="b gh" type="button" data-act="relGo" data-s="1">'+t('back')+'</button><button class="b am" type="button" data-act="relGo" data-s="3">'+t('next')+'</button></div>';
+  else{var m=relMsg(g,b);body='<b style="font-size:20px">'+t('confirm')+'</b>'+fld(t('collect'),'<input id="rd" class="in" type="date" value="'+esc(rel.d||'')+'">')+'<p class="msg" id="rMsg">'+esc(m)+'</p><div class="row2" style="margin-top:12px"><button class="b gh" type="button" data-act="relGo" data-s="2">'+t('back')+'</button><a class="b am" id="rSend" href="'+wa(m)+'" target="_blank" rel="noopener">'+ic('wa',20)+t('send')+'</a></div>'}
+  return '<div class="c dk stack" id="relBox"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:18px">'+t('takeOut')+'</b><span class="mut2">'+rel.s+' / 3</span></div>'+dots+body+'</div>';
+}
+function relMsg(g,b){return t('relMsg').replace('{b}',b).replace('{q}',b/2).replace('{c}',tc(g.crop)).replace('{r}',g.r?t('relR').replace('{r}',g.r):'').replace('{d}',rel.d?fmtDate(rel.d):'__')}
+var loanM=3;
+function vFLoan(){var g=grainList()[0];return {title:t('loanT'),body:'<p class="mut" style="margin:0">'+t('loanS2')+'</p><div class="c stack">'+fld(t('crop'),cropSel('lc',g?g.crop:'wheat'))+fld(t('qty'),inp('lq',g?g.q:20))+fld(t('price'),inp('lp',g?priceOf(g):MSP.wheat[0]))+
+  '<div class="f"><span>'+t('months')+'</span><div class="seg">'+[1,3,6].map(function(m){return '<button type="button" data-lm="'+m+'" aria-pressed="'+(loanM===m)+'">'+m+'</button>'}).join('')+'</div></div>'+fld(t('rate'),inp('lr',10))+'<p class="src" style="margin-top:-6px">'+t('rateHint')+'</p></div>'+
+  '<div class="c dk" id="lOut"></div>'+
+  '<div class="c">'+['l1','l2','l3'].map(function(k,i){return '<div class="check" style="cursor:default"><span class="tag gr" style="min-width:28px;justify-content:center">'+(i+1)+'</span><span>'+t(k)+'</span></div>'}).join('')+'</div>'+ext('wdra'),calc:calcLoan}}
+function calcLoan(){
+  var c=val('lc'),q=nval('lq'),p=nval('lp'),r=nval('lr');
+  var v=q*p,ln=v*0.7,it=ln*(r/100)*(loanM/12);
+  $('#lOut').innerHTML='<div class="lbl">'+t('canGet')+'</div><div class="hv amber">'+inr(ln)+'</div><div class="mut2">70% × '+q+' '+t('q')+' × '+inr(p)+'</div><div class="sep"></div><div style="display:flex;justify-content:space-between"><span class="mut2">'+t('intr')+'</span><b>'+inr(it)+'</b></div><div style="display:flex;justify-content:space-between;margin-top:6px"><span class="mut2">'+t('repay')+'</span><b>'+inr(ln+it)+'</b></div>';
+}
+function vFServices(){return {title:t('services'),body:
+  '<div class="c"><b style="font-size:19px">'+t('soilT')+'</b><p class="mut" style="margin:4px 0 12px">'+t('soilS')+'</p>'+ext('soil')+'</div>'+
+  '<div class="c dk stack"><b style="font-size:19px">'+t('sprayT')+'</b><p class="mut2" style="margin:-6px 0 0">'+t('sprayS')+'</p>'+fld(t('crop'),cropSel('vc','wheat'))+'<div class="grid2">'+fld(t('acres'),inp('va',2))+fld(t('date'),inp('vd','','','date'))+'</div>'+fld(t('place'),inp('vp','','','text'))+'<p class="msg" id="vMsg"></p><a class="b am big" id="vSend" href="#" target="_blank" rel="noopener">'+ic('wa',22)+t('send')+'</a></div>'+
+  '<div class="c"><b style="font-size:19px">'+t('wxT')+'</b><p class="mut" style="margin:4px 0 12px">'+t('wxS')+'</p>'+ext('imd')+'</div>',calc:calcSpray}}
+function calcSpray(){var m=t('sprayMsg').replace('{a}',val('va')||'__').replace('{c}',tc(val('vc'))).replace('{pl}',val('vp').trim()||'__').replace('{d}',val('vd')?fmtDate(val('vd')):'__');$('#vMsg').textContent=m;$('#vSend').href=wa(m)}
+function vFLearn(){return {title:t('learn'),body:LEARN.map(function(x,i){var p=L(x.p);return '<details class="ac"'+(i===0?' open':'')+'><summary><span class="tag gr">'+(i+1)+'</span>'+L(x.t)+'</summary><p>'+p+'</p>'+spkBtn(p)+'</details>'}).join('')+'<p class="src">'+MSPSRC+'</p>'}}
+function vFHelp(){return {title:t('helpT'),body:
+  '<a class="b big" href="tel:'+KCC+'" style="min-height:84px;flex-direction:column;gap:0"><span>'+t('kcc')+'</span><span style="font-size:26px">1800 180 1551</span></a><p class="mut" style="margin:-4px 0 0;text-align:center">'+t('kccS')+'</p>'+
+  '<div class="c stack"><b>'+t('links')+'</b>'+ext('agm')+ext('enam')+ext('wdra')+ext('soil')+ext('imd')+'</div>'+
+  '<a class="b gh big" href="'+wa('KrishiLink: '+location.href.split('#')[0]+'#farmer')+'" target="_blank" rel="noopener">'+ic('wa',22)+t('shareApp')+'</a>'+
+  '<a class="b gh big" href="#start">'+t('switchRole')+'</a>'}}
+
+/* ================= FIELD PARTNER ================= */
+function vCHome(){var fs=S.get('crp-f',[]),vs=S.get('crp-v',[]);var open=vs.filter(function(v){return !v.done});
+  return {title:'Field partner',body:'<div class="grid3"><div class="c" style="padding:12px"><div class="lbl">Farmers added</div><b style="font-size:28px">'+fs.length+'</b></div><div class="c" style="padding:12px"><div class="lbl">With bank and Aadhaar</div><b style="font-size:28px">'+fs.filter(function(f){return f.bank}).length+'</b></div><div class="c" style="padding:12px"><div class="lbl">Visits done</div><b style="font-size:28px">'+vs.filter(function(v){return v.done}).length+'</b></div></div>'+
+  '<a class="c dk" href="#crp-add" style="display:flex;gap:12px;align-items:center;text-decoration:none;color:#fff"><span class="amber">'+ic('plus',28)+'</span><span style="flex:1"><b style="font-size:18px">Add a farmer</b><br><span class="mut2">Name, mobile, village, crop. Saved on this phone.</span></span></a>'+
+  '<div class="c"><b style="font-size:18px">Open visits</b>'+(open.length?'<ul class="list">'+open.map(function(v){return '<li><span class="t"><b>'+esc(v.village)+'</b><small>'+esc(v.purpose)+(v.date?', '+fmtDate(v.date):'')+'</small></span></li>'}).join('')+'</ul>':'<p class="mut" style="margin:6px 0 0">No open visits. Plan one in Visits.</p>')+'</div>'+
+  row('#crp-scripts','msg','Ready messages','Explain MSP, warehouse loans and the helpline on WhatsApp')}}
+function vCAdd(){var fs=S.get('crp-f',[]);return {title:'Add a farmer',body:'<div class="c stack">'+fld('Name',inp('fn','','','text'))+fld('Mobile number',inp('fm','','10 digits','tel'))+fld('Village',inp('fv','','','text'))+'<div class="grid2">'+fld('Main crop',cropSel('fc','wheat'))+fld('Acres',inp('fa',''))+'</div>'+
+  '<label class="check"><input type="checkbox" id="fb"><span>Bank account linked to Aadhaar</span></label><label class="check"><input type="checkbox" id="fs"><span>Has a smartphone with WhatsApp</span></label><button class="b big" type="button" data-act="crpAdd">Save farmer</button><p class="src">Saved only on this phone.</p></div>'+
+  (fs.length?'<div class="c"><b>Farmers ('+fs.length+')</b><ul class="list">'+fs.map(function(f,i){return '<li><span class="t"><b>'+esc(f.name)+'</b><small>'+esc(f.village)+', '+tc(f.crop)+(f.acres?', '+f.acres+' acres':'')+(f.bank?'':'. Bank link pending')+'</small></span>'+(f.wa?'<a class="b sm" href="'+wa('Namaste '+f.name+'. You are now registered with your field partner. For farming questions call Kisan Call Centre free on 1800 180 1551.',f.mobile)+'" target="_blank" rel="noopener">'+ic('wa',18)+'</a>':'<a class="b gh sm" href="tel:'+esc(f.mobile)+'">'+ic('phone',18)+'</a>')+'<button class="x" type="button" data-act="crpDel" data-i="'+i+'">Remove</button></li>'}).join('')+'</ul></div>':'')}}
+function vCVisits(){var vs=S.get('crp-v',[]);return {title:'Village visits',body:'<div class="c stack">'+fld('Village',inp('vv','','','text'))+'<div class="grid2">'+fld('Date',inp('vdt','','','date'))+fld('Purpose','<select id="vpu" class="in"><option>Onboarding</option><option>Soil samples</option><option>Village meeting</option><option>Follow-up</option><option>Warehouse visit</option></select>')+'</div>'+fld('Notes',inp('vno','','','text'))+'<button class="b big" type="button" data-act="visAdd">Plan visit</button></div>'+
+  (vs.length?'<div class="c"><ul class="list">'+vs.map(function(v,i){return '<li><span class="t"><b>'+esc(v.village)+(v.done?' <span class="tag gr">Done</span>':'')+'</b><small>'+esc(v.purpose)+(v.date?', '+fmtDate(v.date):'')+(v.notes?'. '+esc(v.notes):'')+(v.doneAt?'. Checked '+esc(v.doneAt):'')+'</small></span>'+(v.done?'':'<button class="b sm" type="button" data-act="visDone" data-i="'+i+'">Mark done</button>')+'<button class="x" type="button" data-act="visDel" data-i="'+i+'">Remove</button></li>'}).join('')+'</ul></div>':'')}}
+var SCRIPTS=[
+ ['MSP check before selling','नमस्ते। फसल बेचने से पहले सरकारी समर्थन मूल्य (MSP) जरूर देखें। अगर व्यापारी कम दाम दे रहा है तो जिले के सरकारी खरीद केंद्र से पूछें। खेती के सवालों के लिए किसान कॉल सेंटर: 1800 180 1551 (मुफ़्त)।\n\nNamaste. Check the MSP before you sell. If a trader offers less, ask the government purchase centre in your district. Farming questions: Kisan Call Centre 1800 180 1551 (free).'],
+ ['Loan on stored grain','नमस्ते। फसल कटते ही कम दाम पर बेचने के बजाय WDRA-पंजीकृत गोदाम में रखें। e-NWR रसीद पर बैंक से लोन लें और दाम सुधरने पर बेचें।\n\nNamaste. Instead of selling cheap at harvest, store grain in a WDRA-registered warehouse, take a bank loan on the e-NWR receipt, and sell when the price improves.'],
+ ['Dry and weigh correctly','नमस्ते। अनाज रखने से पहले अच्छी तरह सुखाएं। तौल सामने देखें, कांटा पहले शून्य पर हो, और लिखित तौल पर्ची लें।\n\nNamaste. Dry grain well before storing. Watch the weighing, check the scale starts at zero, and take a written weighment slip.'],
+ ['Free soil test','नमस्ते। मृदा स्वास्थ्य कार्ड के लिए मिट्टी का नमूना दें। इससे सही खाद की मात्रा पता चलती है और खर्च बचता है।\n\nNamaste. Give a soil sample for your Soil Health Card. It tells you the right fertiliser dose and saves money.']
+];
+function vCScripts(){return {title:'Ready messages',body:SCRIPTS.map(function(s){return '<div class="c"><b style="font-size:18px">'+s[0]+'</b><p class="msg">'+esc(s[1])+'</p><a class="b sm" href="'+wa(s[1])+'" target="_blank" rel="noopener" style="margin-top:10px;display:inline-flex">'+ic('wa',18)+'Share</a></div>'}).join('')}}
+
+/* ================= FPO ================= */
+function vPHome(){var ms=S.get('fpo-m',[]);var by={};ms.forEach(function(m){by[m.crop]=(by[m.crop]||0)+m.acres*m.yld});
+  return {title:'FPO',body:'<div class="grid2"><div class="c"><div class="lbl">Members</div><b style="font-size:30px">'+ms.length+'</b></div><div class="c"><div class="lbl">Acres</div><b style="font-size:30px">'+ms.reduce(function(s,m){return s+(+m.acres||0)},0)+'</b></div></div>'+
+  '<div class="c dk"><div class="lbl">Expected harvest from members</div>'+(Object.keys(by).length?'<ul class="list" style="margin-top:6px">'+Object.keys(by).map(function(k){return '<li style="border-color:rgba(255,255,255,.12)"><span class="t"><b>'+tc(k)+'</b></span><b class="amber">'+Math.round(by[k])+' quintal</b></li>'}).join('')+'</ul>':'<p class="mut2" style="margin:6px 0 0">Add members with their acres and expected yield to see this.</p>')+'</div>'+
+  row('#fpo-members','people','Members','Add members, acres and expected yield')+row('#fpo-pool','fpo','Pool a lot','Combine members’ grain into one lot and split payment')+row('#fpo-broadcast','msg','Price message','Send today’s buying price to all members','','a')}}
+function vPMembers(){var ms=S.get('fpo-m',[]);return {title:'Members',body:'<div class="c stack">'+fld('Name',inp('mn','','','text'))+fld('Mobile',inp('mm','','10 digits','tel'))+'<div class="grid3">'+fld('Crop',cropSel('mc','wheat'))+fld('Acres',inp('ma',''))+fld('Yield qtl/acre',inp('my',''))+'</div><button class="b big" type="button" data-act="memAdd">Add member</button><p class="src">Saved only on this phone.</p></div>'+
+  (ms.length?'<div class="c"><ul class="list">'+ms.map(function(m,i){return '<li><span class="t"><b>'+esc(m.name)+'</b><small>'+tc(m.crop)+', '+m.acres+' acres × '+m.yld+' = '+Math.round(m.acres*m.yld)+' quintal</small></span><button class="x" type="button" data-act="memDel" data-i="'+i+'">Remove</button></li>'}).join('')+'</ul></div>':'')}}
+var poolCrop='wheat';
+function vPPool(){var ms=S.get('fpo-m',[]).filter(function(m){return m.crop===poolCrop});
+  return {title:'Pool a lot',body:'<div class="c stack">'+fld('Crop',cropSel('plc',poolCrop))+(ms.length?ms.map(function(m,i){return fld(esc(m.name)+' (quintal)','<input class="in" data-pq="'+i+'" type="number" inputmode="decimal" value="'+Math.round(m.acres*m.yld)+'">')}).join(''):'<p class="mut" style="margin:0">No members grow this crop yet. Add them in Members.</p>')+
+  '<div class="grid2">'+fld('Price (₹ per quintal)',inp('plp',MSP[poolCrop][0]))+fld('FPO fee (%)',inp('plf',1))+'</div></div><div class="c dk" id="plOut"></div>',calc:calcPool}}
+function calcPool(){var ms=S.get('fpo-m',[]).filter(function(m){return m.crop===poolCrop});var p=nval('plp'),f=nval('plf');var tot=0,rows='';
+  $$('[data-pq]').forEach(function(e){var q=+e.value||0;tot+=q;var m=ms[+e.dataset.pq];rows+='<li style="border-color:rgba(255,255,255,.12)"><span class="t"><b>'+esc(m.name)+'</b><small class="mut2">'+q+' quintal</small></span><b>'+inr(q*p*(1-f/100))+'</b></li>'});
+  var msg='Lot for sale: '+tot+' quintal '+tc(poolCrop)+', pooled by our FPO from '+ms.length+' members. Asking ₹'+p.toLocaleString('en-IN')+' per quintal. Please call to inspect.';
+  $('#plOut').innerHTML='<div class="lbl">Lot size</div><div class="hv amber">'+tot+' quintal</div><div class="mut2">Value '+inr(tot*p)+'. FPO fee '+inr(tot*p*f/100)+'</div><div class="sep"></div><b>Payout to members</b><ul class="list">'+rows+'</ul><a class="b am big" href="'+wa(msg)+'" target="_blank" rel="noopener" style="margin-top:12px">'+ic('wa',20)+'Share lot with buyers</a>';
+}
+function vPBroadcast(){return {title:'Price message',body:'<div class="c stack">'+fld('Crop',cropSel('bc','wheat'))+fld('Buying price (₹ per quintal)',inp('bp',''))+fld('Collection point',inp('bl','','','text'))+'<div class="grid2">'+fld('Date',inp('bd','','','date'))+fld('Contact number',inp('bn','','','tel'))+'</div></div><div class="c"><div class="lbl">Message</div><p class="msg" id="bMsg"></p></div><a class="b big" id="bSend" href="#" target="_blank" rel="noopener">'+ic('wa',22)+'Send to members’ group</a>',calc:function(){
+  var c=val('bc'),m='नमस्ते। FPO आज '+tc(c)+' खरीद रहा है: ₹'+(val('bp')?(+val('bp')).toLocaleString('en-IN'):'__')+' प्रति क्विंटल। जगह: '+(val('bl')||'__')+'. तारीख: '+(val('bd')?fmtDate(val('bd')):'__')+'. संपर्क: '+(val('bn')||'__')+'।\n\nNamaste. Our FPO is buying '+CN.en[c]+' at ₹'+(val('bp')?(+val('bp')).toLocaleString('en-IN'):'__')+' per quintal at '+(val('bl')||'__')+' on '+(val('bd')?fmtDate(val('bd')):'__')+'. Contact '+(val('bn')||'__')+'. MSP is ₹'+MSP[c][0].toLocaleString('en-IN')+'.';
+  $('#bMsg').textContent=m;$('#bSend').href=wa(m)}}}
+
+/* ================= TRADER ================= */
+function vTHome(){return {title:'Trader',body:row('#trader-cost','calc','Landed cost','Price plus mandi fee, commission, labour and transport')+row('#trader-offer','msg','Send an offer','Counter-offer message with quality terms')+row('#trader-msp','tag','MSP reference','All notified crops, official figures','','a')+ext('agm')+ext('enam')}}
+function vTCost(){return {title:'Landed cost',body:'<div class="c stack">'+fld('Crop',cropSel('tc','wheat'))+'<div class="grid2">'+fld('Buying price (₹/quintal)',inp('tp',''))+fld('Quantity (quintal)',inp('tq',100))+fld('Mandi fee (%)',inp('tf',1))+fld('Commission (%)',inp('tm',2))+fld('Labour (₹/quintal)',inp('tl',15))+fld('Transport (₹ total)',inp('tt',0))+'</div>'+fld('Your selling price (₹/quintal)',inp('ts',''))+'</div><div class="c dk" id="tOut"></div>',calc:function(){
+  var p=nval('tp'),q=nval('tq')||1,f=nval('tf'),m=nval('tm'),l=nval('tl'),tr=nval('tt'),s=nval('ts');var per=p*(1+f/100+m/100)+l+tr/q;
+  $('#tOut').innerHTML=p?'<div class="lbl">Landed cost</div><div class="hv amber">'+inr(per)+' <span style="font-size:16px" class="mut2">per quintal</span></div><div class="mut2">Total '+inr(per*q)+' for '+q+' quintal. MSP '+inr(MSP[val('tc')][0])+'</div>'+(s?'<div class="flag '+(s>per?'ok':'bad')+'" style="margin-top:12px">Margin '+inr(s-per)+' per quintal, '+inr((s-per)*q)+' total</div>':''):'<p style="margin:0">Enter a buying price.</p>'}}}
+function vTOffer(){return {title:'Send an offer',body:'<div class="c stack">'+fld('Crop',cropSel('oc','wheat'))+'<div class="grid2">'+fld('Quantity (quintal)',inp('oq',''))+fld('Your price (₹/quintal)',inp('op',''))+fld('Max moisture (%)',inp('om',12))+fld('Pickup date',inp('od','','','date'))+'</div>'+fld('Payment terms','<select id="ot" class="in"><option>Payment on weighing</option><option>Payment within 2 days of delivery</option><option>Payment within 7 days of delivery</option></select>')+'</div><div class="c"><div class="lbl">Message</div><p class="msg" id="oMsg"></p></div><a class="b big" id="oSend" href="#" target="_blank" rel="noopener">'+ic('wa',22)+'Send on WhatsApp</a>',calc:function(){
+  var c=val('oc'),m='Namaste. I can buy '+(val('oq')||'__')+' quintal '+CN.en[c]+' ('+CN.hi[c]+') at ₹'+(val('op')?(+val('op')).toLocaleString('en-IN'):'__')+' per quintal. Moisture up to '+(val('om')||'__')+'%, weighed in front of you. Pickup on '+(val('od')?fmtDate(val('od')):'__')+'. '+val('ot')+'.';
+  $('#oMsg').textContent=m;$('#oSend').href=wa(m)}}}
+function vTMsp(){return {title:'MSP reference',body:'<div class="c"><table class="tbl"><thead><tr><th>Crop</th><th>Season</th><th>₹ per quintal</th></tr></thead><tbody>'+Object.keys(MSP).map(function(k){return '<tr><td>'+CN.en[k]+' <span class="mut">'+CN.hi[k]+'</span></td><td>'+(MSP[k][1]==='R'?'Rabi 2027-28':'Kharif 2026-27')+'</td><td><b>'+MSP[k][0].toLocaleString('en-IN')+'</b></td></tr>'}).join('')+'</tbody></table></div><p class="src">'+MSPSRC+'</p>'}}
+
+/* ================= COMPANY BUYER ================= */
+function vBHome(){return {title:'Company buyer',body:row('#buyer-rfq','doc','Request for quotation','Write an RFQ for FPOs and traders')+row('#buyer-suppliers','star','Supplier scorecard','Track on-time delivery and quality pass rate')+row('#buyer-trace','check','Lot documents','Checklist from farm to your plant','','a')+ext('enam')}}
+function vBRfq(){return {title:'Request for quotation',body:'<div class="c stack">'+fld('Company',inp('rco','','','text'))+'<div class="grid2">'+fld('Crop',cropSel('rc','wheat'))+fld('Quantity (MT)',inp('rq',''))+fld('Max moisture (%)',inp('rm',12))+fld('Max foreign matter (%)',inp('rf',1))+'</div>'+fld('Delivery location',inp('rl','','','text'))+'<div class="grid2">'+fld('Deliver by',inp('rd','','','date'))+fld('Quotes due by',inp('rdq','','','date'))+'</div>'+fld('Payment terms','<select id="rt" class="in"><option>7 days after goods receipt</option><option>15 days after goods receipt</option><option>30 days after goods receipt</option><option>Advance against lab report</option></select>')+'</div><div class="c"><div class="lbl">RFQ</div><p class="msg" id="rMsg2"></p></div><div class="row2"><a class="b" id="rWa" href="#" target="_blank" rel="noopener">'+ic('wa',20)+'WhatsApp</a><a class="b gh" id="rMail" href="#">Email</a></div>',calc:function(){
+  var c=val('rc'),m='RFQ from '+(val('rco')||'__')+'\nCrop: '+CN.en[c]+'\nQuantity: '+(val('rq')||'__')+' MT\nQuality: moisture up to '+(val('rm')||'__')+'%, foreign matter up to '+(val('rf')||'__')+'%, lab report required\nDeliver to: '+(val('rl')||'__')+' by '+(val('rd')?fmtDate(val('rd')):'__')+'\nPayment: '+val('rt')+'\nPlease quote price per quintal, delivered, by '+(val('rdq')?fmtDate(val('rdq')):'__')+'.';
+  $('#rMsg2').textContent=m;$('#rWa').href=wa(m);$('#rMail').href='mailto:?subject='+encodeURIComponent('RFQ: '+CN.en[c]+' '+(val('rq')||'')+' MT')+'&body='+encodeURIComponent(m)}}}
+function vBSup(){var ss=S.get('sup',[]);return {title:'Supplier scorecard',body:'<div class="c stack">'+fld('Supplier name',inp('un','','','text'))+'<div class="grid3">'+fld('Deliveries',inp('ud',''))+fld('On time',inp('uo',''))+fld('QC passed',inp('uq',''))+'</div><button class="b big" type="button" data-act="supAdd">Add or update</button><p class="src">Saved only on this device.</p></div>'+
+  (ss.length?'<div class="c"><table class="tbl"><thead><tr><th>Supplier</th><th>On time</th><th>QC pass</th></tr></thead><tbody>'+ss.map(function(s,i){var ot=s.d?Math.round(s.o/s.d*100):0,qc=s.d?Math.round(s.q/s.d*100):0;return '<tr><td><b>'+esc(s.n)+'</b><br><small class="mut">'+s.d+' deliveries</small> <button class="x" type="button" data-act="supDel" data-i="'+i+'">Remove</button></td><td>'+ot+'%</td><td>'+qc+'%</td></tr>'}).join('')+'</tbody></table></div>':'')}}
+var DOCS=['Weighment slip','Moisture and quality lab report','Warehouse receipt or e-NWR','Tax invoice','E-way bill','Goods receipt note (GRN)'];
+function vBTrace(){var ls=S.get('lots',[]);return {title:'Lot documents',body:'<div class="c stack">'+fld('Lot or truck reference',inp('ln','','','text'))+'<button class="b big" type="button" data-act="lotAdd">Add lot</button></div>'+
+  ls.map(function(l,i){var done=l.d.filter(Boolean).length;return '<div class="c"><div style="display:flex;justify-content:space-between;gap:10px"><b style="font-size:18px">'+esc(l.n)+'</b><span class="tag '+(done===DOCS.length?'gr':'am')+'">'+done+' / '+DOCS.length+'</span></div><div class="bar" style="margin:10px 0"><span style="width:'+(done/DOCS.length*100)+'%"></span></div>'+DOCS.map(function(d,j){return '<label class="check"><input type="checkbox" data-lot="'+i+'" data-doc="'+j+'"'+(l.d[j]?' checked':'')+'><span>'+d+'</span></label>'}).join('')+'<button class="x" type="button" data-act="lotDel" data-i="'+i+'">Remove lot</button></div>'}).join('')}}
+/* ================= ROUTER ================= */
+var R={
+ start:{v:vStart},
+ farmer:{v:vFHome,role:'farmer',home:1},'farmer-price':{v:vFPrice,role:'farmer'},'farmer-sell':{v:vFSell,role:'farmer'},'farmer-store':{v:vFStore,role:'farmer'},'farmer-loan':{v:vFLoan,role:'farmer'},'farmer-services':{v:vFServices,role:'farmer'},'farmer-learn':{v:vFLearn,role:'farmer'},'farmer-help':{v:vFHelp,role:'farmer'},
+ crp:{v:vCHome,role:'crp',home:1},'crp-add':{v:vCAdd,role:'crp'},'crp-visits':{v:vCVisits,role:'crp'},'crp-scripts':{v:vCScripts,role:'crp'},
+ fpo:{v:vPHome,role:'fpo',home:1},'fpo-members':{v:vPMembers,role:'fpo'},'fpo-pool':{v:vPPool,role:'fpo'},'fpo-broadcast':{v:vPBroadcast,role:'fpo'},
+ trader:{v:vTHome,role:'trader',home:1},'trader-cost':{v:vTCost,role:'trader'},'trader-offer':{v:vTOffer,role:'trader'},'trader-msp':{v:vTMsp,role:'trader'},
+ buyer:{v:vBHome,role:'buyer',home:1},'buyer-rfq':{v:vBRfq,role:'buyer'},'buyer-suppliers':{v:vBSup,role:'buyer'},'buyer-trace':{v:vBTrace,role:'buyer'}
+};
+function NAV(role){
+  if(role==='farmer')return [['farmer','home',t('home')],['farmer-store','store',t('store')],['farmer-sell','sell',t('sell')],['farmer-loan','loan',t('loan')],['farmer-help','phone',t('help')]];
+  return {crp:[['crp','home','Home'],['crp-add','plus','Add farmer'],['crp-visits','check','Visits'],['crp-scripts','msg','Messages'],['start','people','Switch']],
+   fpo:[['fpo','home','Home'],['fpo-members','people','Members'],['fpo-pool','fpo','Pool lot'],['fpo-broadcast','msg','Price msg'],['start','people','Switch']],
+   trader:[['trader','home','Home'],['trader-cost','calc','Landed cost'],['trader-offer','msg','Offer'],['trader-msp','tag','MSP'],['start','people','Switch']],
+   buyer:[['buyer','home','Home'],['buyer-rfq','doc','RFQ'],['buyer-suppliers','star','Suppliers'],['buyer-trace','check','Documents'],['start','people','Switch']]}[role];
+}
+var cur='start',curCalc=null;
+function render(){
+  var h=(location.hash||'').replace('#','')||'home';
+  if(!window.KLnav&&h!=='home'&&h.indexOf('s-')!==0){h='home'}
+  if(h==='home'||h.indexOf('s-')===0){showSite(h);return}
+  showApp();
+  if(!lang){paint(vLang(),null,h);return}
+  if(!R[h])h='start';
+  cur=h;var r=R[h],v=r.v();
+  paint(v,r,h);
+}
+function paint(v,r,h){
+  document.documentElement.lang=lang||'en';
+  var back=r&&r.role?(r.home?'#start':'#'+r.role):null;
+  $('#hdr').innerHTML=v.hdr||((back?'<a class="back" href="'+back+'" aria-label="Back">'+ic('back',20)+'</a>':'')+'<h1>'+(v.title||'')+'</h1>');
+  $('#main').innerHTML=v.body;
+  $('#fabSlot').innerHTML=v.fab||'';
+  var nav=$('#nav');
+  if(r&&r.role){var items=NAV(r.role);nav.hidden=false;nav.style.gridTemplateColumns='repeat('+items.length+',1fr)';nav.innerHTML=items.map(function(x){return '<a href="#'+x[0]+'"'+(x[0]===h||(h.indexOf(x[0]+'-')===0&&false)?' aria-current="page"':'')+'>'+ic(x[1],22)+'<span>'+x[2]+'</span></a>'}).join('')}
+  else{nav.hidden=true;nav.innerHTML=''}
+  curCalc=v.calc||null;if(curCalc)curCalc();
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',render);
+document.addEventListener('click',function(e){if(e.target.closest('a[href^="#"],[data-golang],[data-lang]'))window.KLnav=true},true);
+function showSite(h){document.documentElement.classList.add('site');$('#site').hidden=false;$('.app').hidden=true;$('#nav').hidden=true;$('#fabSlot').innerHTML='';if(window.KLsite)window.KLsite.shown(h)}
+function showApp(){if(!$('.app').hidden&&$('#site').hidden)return;document.documentElement.classList.remove('site');$('#site').hidden=true;$('.app').hidden=false}
+window.KL={MSP:MSP,CN:CN,setLang:function(l){lang=l;S.set('lang',l)}};
+
+/* ================= EVENTS ================= */
+document.addEventListener('input',function(e){
+  var el=e.target;
+  if(el.dataset.gf){var card=el.closest('[data-gi]');var g=grainList();var x=g[+card.dataset.gi];if(x){x[el.dataset.gf]=+el.value;S.set('grain',g)}}
+  if(cur==='farmer-store'&&el.id==='rd'&&rel){rel.d=el.value;var g2=grainList()[rel.i];var m=relMsg(g2,Math.min(rel.b,g2.q*2));$('#rMsg').textContent=m;$('#rSend').href=wa(m);return}
+  if(curCalc)curCalc();
+});
+document.addEventListener('change',function(e){
+  var el=e.target;
+  if(el.id==='plc'){poolCrop=el.value;render();return}
+  if(el.dataset.lot!=null){var ls=S.get('lots',[]);ls[+el.dataset.lot].d[+el.dataset.doc]=el.checked;S.set('lots',ls);render();return}
+  if(curCalc)curCalc();
+});
+var ACT={
+ sellSave:function(){var s=calcSell();if(!s.q||!s.p){toast(t('need'));return}var g=grainList();g.unshift({crop:s.c,q:s.q,where:'home',pl:s.pl,today:s.p});S.set('grain',g);toast(t('saved'))},
+ gadd:function(){var q=nval('gq');if(!q){toast(t('need'));return}var g=grainList();g.unshift({crop:val('gc'),q:q,where:addWhere,pl:val('gpl').trim(),r:val('gr').trim()});S.set('grain',g);toast(t('saved'));render()},
+ gdel:function(b){var g=grainList();g.splice(+b.dataset.i,1);S.set('grain',g);rel=null;render()},
+ relStart:function(b){rel={i:+b.dataset.i,s:1,b:20,d:''};render()},
+ relX:function(){rel=null;render()},
+ relGo:function(b){rel.s=+b.dataset.s;$('#relBox').outerHTML=relView()},
+ relB:function(b){var g=grainList()[rel.i];rel.b=Math.max(10,Math.min(g.q*2,Math.min(rel.b,g.q*2)+(+b.dataset.d)));$('#relBox').outerHTML=relView()},
+ crpAdd:function(){var n=val('fn').trim(),m=val('fm').replace(/\D/g,'');if(n.length<2){toast('Enter the farmer’s name.');return}if(!/^[6-9]\d{9}$/.test(m)){toast('Enter a 10 digit mobile number starting with 6, 7, 8 or 9.');return}var fs=S.get('crp-f',[]);fs.unshift({name:n,mobile:m,village:val('fv').trim(),crop:val('fc'),acres:nval('fa'),bank:$('#fb').checked,wa:$('#fs').checked});S.set('crp-f',fs);toast('Farmer saved.');render()},
+ crpDel:function(b){var fs=S.get('crp-f',[]);fs.splice(+b.dataset.i,1);S.set('crp-f',fs);render()},
+ visAdd:function(){var v=val('vv').trim();if(!v){toast('Enter the village.');return}var vs=S.get('crp-v',[]);vs.unshift({village:v,date:val('vdt'),purpose:val('vpu'),notes:val('vno').trim(),done:false});S.set('crp-v',vs);render()},
+ visDone:function(b){var vs=S.get('crp-v',[]);var x=vs[+b.dataset.i];x.done=true;x.doneAt=new Date().toLocaleString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});S.set('crp-v',vs);render()},
+ visDel:function(b){var vs=S.get('crp-v',[]);vs.splice(+b.dataset.i,1);S.set('crp-v',vs);render()},
+ memAdd:function(){var n=val('mn').trim(),a=nval('ma'),y=nval('my');if(n.length<2||!a||!y){toast('Enter name, acres and expected yield.');return}var ms=S.get('fpo-m',[]);ms.push({name:n,mobile:val('mm').replace(/\D/g,''),crop:val('mc'),acres:a,yld:y});S.set('fpo-m',ms);render()},
+ memDel:function(b){var ms=S.get('fpo-m',[]);ms.splice(+b.dataset.i,1);S.set('fpo-m',ms);render()},
+ supAdd:function(){var n=val('un').trim(),d=nval('ud'),o=nval('uo'),q=nval('uq');if(!n||!d){toast('Enter the supplier and number of deliveries.');return}if(o>d||q>d){toast('On time and QC passed cannot be more than deliveries.');return}var ss=S.get('sup',[]);var ex=ss.filter(function(s){return s.n.toLowerCase()===n.toLowerCase()})[0];if(ex){ex.d=d;ex.o=o;ex.q=q}else ss.push({n:n,d:d,o:o,q:q});S.set('sup',ss);render()},
+ supDel:function(b){var ss=S.get('sup',[]);ss.splice(+b.dataset.i,1);S.set('sup',ss);render()},
+ lotAdd:function(){var n=val('ln').trim();if(!n){toast('Enter a lot or truck reference.');return}var ls=S.get('lots',[]);ls.unshift({n:n,d:DOCS.map(function(){return false})});S.set('lots',ls);render()},
+ lotDel:function(b){var ls=S.get('lots',[]);ls.splice(+b.dataset.i,1);S.set('lots',ls);render()}
+};
+document.addEventListener('click',function(e){
+  var el=e.target;
+  var lg=el.closest('[data-lang]');if(lg){lang=lg.dataset.lang;S.set('lang',lang);render();return}
+  var sy=el.closest('[data-say]');if(sy){speak(sy.dataset.say);return}
+  var wh=el.closest('[data-where]');if(wh){addWhere=wh.dataset.where;$$('[data-where]').forEach(function(b){b.setAttribute('aria-pressed',String(b===wh))});return}
+  var lm=el.closest('[data-lm]');if(lm){loanM=+lm.dataset.lm;$$('[data-lm]').forEach(function(b){b.setAttribute('aria-pressed',String(b===lm))});calcLoan();return}
+  var mic=el.closest('[data-mic]');if(mic){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){toast(t('noVoice'));return}try{var r=new SR();r.lang={hi:'hi-IN',kn:'kn-IN',en:'en-IN'}[lang||'en'];r.onresult=function(ev){var s=ev.results[0][0].transcript,mm=s.match(/\d+/);if(mm){$('#'+mic.dataset.mic).value=mm[0];if(curCalc)curCalc()}toast('“'+s+'”')};r.onerror=function(){toast(t('noVoice'))};r.start();toast(t('say')+'…')}catch(x){toast(t('noVoice'))}return}
+  var sendIds=['sSend','vSend','oSend','bSend'];var sl=el.closest('a[href="#"]');if(sl&&sendIds.indexOf(sl.id)>-1){e.preventDefault();toast('Fill in the details first.');return}
+  var a=el.closest('[data-act]');if(a&&ACT[a.dataset.act]){ACT[a.dataset.act](a)}
+});
+if(location.hash&&location.hash!=='#home'&&location.hash.indexOf('#s-')!==0){try{history.replaceState(null,'',location.pathname+location.search+'#home')}catch(e){location.hash='home'}}
+render();
+})();
+</script>
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s)},$$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+var inr=function(n){return '₹'+Math.round(n||0).toLocaleString('en-IN')};
+var RM=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var KL=window.KL,MSP=KL.MSP,CN=KL.CN;
+var hasG=!!(window.gsap&&window.ScrollTrigger);
+if(hasG)gsap.registerPlugin(ScrollTrigger);
+var site=$('#site');if(RM||!hasG)site.classList.add('no-anim');
+
+/* ---- wheat field canvas ---- */
+var cv=$('#field'),cx=cv.getContext('2d'),W=0,H=0,DPR=1,stalks=[],mx=-9999,my=-9999,running=false,visible=true;
+function build(){DPR=Math.min(window.devicePixelRatio||1,2);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*DPR;cv.height=H*DPR;cx.setTransform(DPR,0,0,DPR,0,0);
+  var n=Math.round(Math.min(260,Math.max(90,W/6)));stalks=[];
+  for(var i=0;i<n;i++){var depth=Math.random();stalks.push({x:Math.random()*W,h:H*(0.28+0.42*depth)*(0.75+Math.random()*0.35),p:Math.random()*6.28,d:depth,lean:0})}
+  stalks.sort(function(a,b){return a.d-b.d});}
+function draw(ts){
+  var t=ts||0;cx.clearRect(0,0,W,H);
+  var g=cx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0B1F19');g.addColorStop(1,'#123528');cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  for(var i=0;i<stalks.length;i++){var s=stalks[i],base=H+4,sway=RM?0:Math.sin(t*0.0011+s.p+s.x*0.004)*(10+18*s.d);
+    var dx=s.x-mx,dy=(base-s.h)-my,dist=Math.sqrt(dx*dx+dy*dy),push=0;
+    if(dist<160){push=(dx>0?1:-1)*(160-dist)*0.45}
+    s.lean+=(push-s.lean)*0.08;
+    var tipx=s.x+sway+s.lean,tipy=base-s.h;
+    var a=0.25+0.6*s.d,col='rgba(242,181,68,'+a.toFixed(2)+')';
+    cx.strokeStyle=col;cx.lineWidth=0.8+1.6*s.d;cx.beginPath();cx.moveTo(s.x,base);cx.quadraticCurveTo(s.x+(sway+s.lean)*0.3,base-s.h*0.55,tipx,tipy);cx.stroke();
+    var hl=10+16*s.d,ang=Math.atan2(tipy-(base-s.h*0.55),tipx-(s.x+(sway+s.lean)*0.3));
+    cx.fillStyle=col;
+    for(var k=0;k<5;k++){var f=k/5,px=tipx-Math.cos(ang)*hl*f,py=tipy-Math.sin(ang)*hl*f,r=(2.2+2.4*s.d)*(1-f*0.3);
+      cx.beginPath();cx.ellipse(px-Math.sin(ang)*r*0.8,py+Math.cos(ang)*r*0.8,r,r*0.55,ang,0,6.28);cx.fill();
+      cx.beginPath();cx.ellipse(px+Math.sin(ang)*r*0.8,py-Math.cos(ang)*r*0.8,r,r*0.55,ang,0,6.28);cx.fill();}
+  }
+}
+function loop(ts){if(!running)return;if(visible)draw(ts);requestAnimationFrame(loop)}
+function startField(){build();if(RM){draw(0);return}if(!running){running=true;requestAnimationFrame(loop)}}
+window.addEventListener('resize',function(){if(!site.hidden){build();if(RM)draw(0)}});
+cv.parentElement.addEventListener('pointermove',function(e){var r=cv.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top});
+cv.parentElement.addEventListener('pointerleave',function(){mx=my=-9999});
+if('IntersectionObserver' in window)new IntersectionObserver(function(es){visible=es[0].isIntersecting}).observe(cv);
+
+/* ---- fill text words ---- */
+var ft=$('#fillT');ft.innerHTML=ft.textContent.split(' ').map(function(w){return '<span class="w">'+w+'</span>'}).join(' ');
+
+/* ---- marquee ---- */
+var stalk='<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#0B1F19" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 21V8M12 12c-2.5 0-4.5-2-4.5-4.5 2.5 0 4.5 2 4.5 4.5zM12 12c2.5 0 4.5-2 4.5-4.5-2.5 0-4.5 2-4.5 4.5zM12 17c-2.5 0-4.5-2-4.5-4.5 2.5 0 4.5 2 4.5 4.5zM12 17c2.5 0 4.5-2 4.5-4.5-2.5 0-4.5 2-4.5 4.5z"/></svg>';
+var keys=['wheat','paddy','maize','tur','gram','mustard','soybean','groundnut','cotton','ragi','bajra','moong'];
+var one=keys.map(function(k){return '<span>'+CN.en[k]+'<b>'+inr(MSP[k][0])+'</b></span>'+stalk}).join('');
+$('#mq').innerHTML=one+one;
+
+/* ---- calculators ---- */
+var opts=keys.map(function(k){return '<option value="'+k+'">'+CN.en[k]+' / '+CN.hi[k]+'</option>'}).join('');
+$('#xc').innerHTML=opts;$('#lc2').innerHTML=opts;
+function n(id){return +$('#'+id).value||0}
+function calcX(){var c=$('#xc').value,m=MSP[c][0],o=n('xo'),q=n('xq'),cm=n('xm'),out=$('#xout');
+  if(!o){out.innerHTML='<div class="ds" style="margin:0">MSP for '+CN.en[c]+' is <b>'+inr(m)+'</b> per quintal. Type the offer you got.</div>';return}
+  var net=o*q*(1-cm/100),d=o-m;
+  out.innerHTML='<div class="ds" style="margin:0 0 4px">You take home</div><div class="bigv" style="color:#F2B544">'+inr(net)+'</div><span class="pill2 '+(d<0?'bad':'ok')+'">'+inr(Math.abs(d))+(d<0?' below':' above')+' MSP per quintal</span>';}
+function calcH(){var q=n('hq'),t=n('ht'),l=n('hl'),m=n('hm'),r=n('hr'),out=$('#hout');
+  if(!l){out.innerHTML='<div class="ds" style="margin:0">Type the price you expect later.</div>';return}
+  var g=q*(l-t)-q*r*m;out.innerHTML='<div class="ds" style="margin:0 0 4px">'+(g>0?'Hold. Waiting adds about':'Sell now. Waiting loses about')+'</div><div class="bigv">'+inr(Math.abs(g))+'</div>';}
+function calcL(){var c=$('#lc2').value,q=n('lq2'),v=q*MSP[c][0];$('#lout').innerHTML='<div class="ds" style="margin:0 0 4px">At MSP, '+q+' quintal is worth '+inr(v)+'. Possible loan, about</div><div class="bigv" style="color:#0F6E56">'+inr(v*0.7)+'</div>';}
+['xc','xo','xq','xm'].forEach(function(i){$('#'+i).addEventListener('input',calcX)});
+['hq','ht','hl','hm','hr'].forEach(function(i){$('#'+i).addEventListener('input',calcH)});
+['lc2','lq2'].forEach(function(i){$('#'+i).addEventListener('input',calcL)});
+calcX();calcH();calcL();
+
+/* ---- language CTA ---- */
+$$('[data-golang]').forEach(function(b){b.addEventListener('click',function(){KL.setLang(b.dataset.golang);location.hash='farmer'})});
+
+/* ---- nav solid on scroll ---- */
+window.addEventListener('scroll',function(){if(!site.hidden)$('#snav').classList.toggle('solid',window.scrollY>60)},{passive:true});
+
+/* ---- animations ---- */
+var inited=false;
+function initAnim(){
+  if(inited||RM||!hasG)return;inited=true;
+  gsap.from('.mega .ln>span',{yPercent:110,duration:1.1,ease:'power4.out',stagger:.12,delay:.15});
+  gsap.from('.h-sub,.h-cta',{y:24,opacity:0,duration:.9,ease:'power3.out',delay:.6,stagger:.1});
+  gsap.to('#fillT .w',{opacity:1,stagger:.05,ease:'none',scrollTrigger:{trigger:'#s-story',start:'top 70%',end:'bottom 70%',scrub:true}});
+  var path=$('#cpath'),len=path.getTotalLength();path.style.strokeDasharray=len;path.style.strokeDashoffset=len;
+  gsap.set(['#mk1','#mk2','#mk3'],{opacity:0});
+  var chaps=$$('.chap');
+  gsap.timeline({scrollTrigger:{trigger:'#s-curve',start:'top top',end:'+=220%',pin:'#cpin',scrub:true,onUpdate:function(st){var i=st.progress<.36?0:st.progress<.7?1:2;chaps.forEach(function(c,j){c.classList.toggle('on',j===i)})}}})
+    .to(path,{strokeDashoffset:len*0.62,ease:'none',duration:1}).to('#mk1',{opacity:1,duration:.15},'<0.75')
+    .to(path,{strokeDashoffset:len*0.33,ease:'none',duration:1}).to('#mk2',{opacity:1,duration:.15},'<0.6')
+    .to(path,{strokeDashoffset:0,ease:'none',duration:1}).to('#mk3',{opacity:1,duration:.15},'<0.8');
+  ScrollTrigger.matchMedia({'(min-width: 761px)':function(){
+    var tr=$('#rtrack');
+    gsap.to(tr,{x:function(){return -(tr.scrollWidth-window.innerWidth+48)},ease:'none',scrollTrigger:{trigger:'#s-roles',start:'top top',end:function(){return '+='+(tr.scrollWidth-window.innerWidth+200)},pin:true,scrub:true,invalidateOnRefresh:true}});
+  }});
+  $$('.bx').forEach(function(b){gsap.from(b,{y:50,opacity:0,duration:.8,ease:'power3.out',scrollTrigger:{trigger:b,start:'top 88%'}})});
+  gsap.from('.end2 h2',{y:80,opacity:0,duration:1,ease:'power3.out',scrollTrigger:{trigger:'.end2',start:'top 75%'}});
+}
+function loader(cb){
+  var ld=$('#ld');var seen=false;try{seen=sessionStorage.getItem('kl-ld')==='1'}catch(e){}
+  if(RM||seen||!hasG){ld.remove();cb();return}
+  try{sessionStorage.setItem('kl-ld','1')}catch(e){}
+  var o={v:0};gsap.to(o,{v:100,duration:1.3,ease:'power2.inOut',onUpdate:function(){$('#ldn').textContent=Math.round(o.v);$('#ldb').style.width=o.v+'%'},onComplete:function(){gsap.to(ld,{yPercent:-100,duration:.8,ease:'power4.inOut',onComplete:function(){ld.remove()}});cb()}});
+}
+var first=true;
+window.KLsite={shown:function(h){
+  startField();
+  if(first){first=false;loader(function(){initAnim();go(h)})}
+  else{if(hasG)ScrollTrigger.refresh();go(h)}
+}};
+function go(h){if(h&&h.indexOf('s-')===0){var el=document.getElementById(h);if(el)setTimeout(function(){el.scrollIntoView({behavior:RM?'auto':'smooth'})},30)}else if(h==='home'&&!first)window.scrollTo(0,0)}
+if(!site.hidden)window.KLsite.shown((location.hash||'').replace('#','')||'home');
+})();
+</script>
+
+</body>
+</html>
